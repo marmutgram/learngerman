@@ -1,0 +1,2806 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeutschLernen: CEFR A2 → B1 Interaktiver Sprachkurs Listia</title>
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --secondary: #64748b;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 60px; }
+
+    /* Header Nav */
+    header {
+      background: var(--card-bg);
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+    .header-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand { font-weight: 800; font-size: 1.25rem; color: var(--primary); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover, .nav-btn.active { background: #eff6ff; border-color: var(--primary); color: var(--primary); }
+
+    /* Main Container */
+    .app-body { max-width: 1000px; margin: 24px auto; padding: 0 16px; display: flex; flex-direction: column; gap: 24px; }
+
+    /* Cards & Layout */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .card-header { margin-bottom: 20px; border-bottom: 2px solid var(--bg-color); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .card-title { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
+    
+    /* Level Badges */
+    .badge { padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; display: inline-block; }
+    .badge-a2 { background: #dcfce7; color: #15803d; }
+    .badge-a2p { background: #fef9c3; color: #a16207; }
+    .badge-b1 { background: #dbeafe; color: #1e40af; }
+
+    /* Grid for Topics */
+    .level-section-title { font-size: 1.1rem; font-weight: 700; color: var(--text-muted); margin: 16px 0 12px 0; display: flex; align-items: center; gap: 8px; }
+    .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .topic-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .topic-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+    .topic-num { font-size: 0.8rem; font-weight: 800; color: var(--secondary); }
+    .topic-card-title { font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-top: 2px; }
+    .topic-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+    .progress-bar-bg { width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-top: 8px; }
+    .progress-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+
+    /* Lesson Layout */
+    .back-btn { background: #f1f5f9; color: var(--text-main); border: none; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; }
+    .back-btn:hover { background: #e2e8f0; }
+
+    .lesson-section { margin-bottom: 32px; }
+    .section-heading { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--primary); padding-left: 10px; }
+
+    /* Vocab Cards */
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .v-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+    .v-card:hover { border-color: var(--primary); }
+    .v-de { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
+    .v-en { font-size: 0.9rem; color: var(--secondary); margin-top: 4px; display: none; }
+    .v-ex { font-size: 0.85rem; color: var(--primary); font-style: italic; margin-top: 8px; border-top: 1px dashed var(--border); padding-top: 6px; display: none; }
+    .v-status-btns { display: flex; gap: 6px; margin-top: 10px; }
+    .btn-sm { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; border: none; cursor: pointer; font-weight: 600; flex: 1; }
+    .btn-known { background: #dcfce7; color: #15803d; }
+    .btn-practice { background: #fef2f2; color: #991b1b; }
+
+    /* Sentence Chunks */
+    .chunk-list { display: flex; flex-direction: column; gap: 10px; }
+    .chunk-item { background: #f8fafc; border: 1px solid var(--border); padding: 12px 16px; border-radius: 10px; }
+    .chunk-de { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
+    .chunk-en { color: var(--secondary); font-size: 0.85rem; margin-top: 2px; }
+
+    /* Grammar Box */
+    .grammar-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 18px; line-height: 1.5; color: var(--text-main); }
+    .grammar-examples { margin-top: 10px; background: white; padding: 12px; border-radius: 8px; border: 1px solid #dbeafe; font-size: 0.9rem; }
+
+    /* Sentence Builder */
+    .sb-container { background: #f8fafc; border: 1px solid var(--border); padding: 18px; border-radius: 12px; margin-bottom: 12px; }
+    .word-pool, .drop-zone { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; border-radius: 10px; min-height: 52px; align-items: center; }
+    .word-pool { background: #e2e8f0; margin-top: 10px; }
+    .drop-zone { background: white; border: 2px dashed var(--primary); }
+    .chip { background: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; user-select: none; }
+    .chip:hover { border-color: var(--primary); background: #f0f9ff; }
+
+    /* Dialogue */
+    .chat-box { display: flex; flex-direction: column; gap: 12px; background: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid var(--border); }
+    .bubble { padding: 10px 14px; border-radius: 14px; max-width: 80%; line-height: 1.4; font-size: 0.9rem; }
+    .partner { background: #e2e8f0; align-self: flex-start; }
+    .user { background: var(--primary); color: white; align-self: flex-end; }
+    .dialogue-opts { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .opt-btn { background: white; border: 1px solid var(--border); padding: 10px; border-radius: 8px; text-align: left; cursor: pointer; font-size: 0.9rem; font-weight: 500; }
+    .opt-btn:hover { border-color: var(--primary); background: #eff6ff; }
+
+    /* Speaking */
+    .speaking-card { background: #fffbebfb; border: 1px solid #fef3c7; border-radius: 12px; padding: 20px; }
+    .speaking-prompt { font-size: 1.05rem; font-weight: 700; color: #92400e; margin-bottom: 8px; }
+    .hints-list { margin: 10px 0; padding-left: 20px; font-size: 0.85rem; color: #b45309; }
+    .timer-btn { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+    .timer-btn:hover { background: #d97706; }
+    .model-answer-box { background: white; border: 1px solid #fde68a; padding: 14px; border-radius: 10px; margin-top: 12px; font-size: 0.9rem; line-height: 1.5; color: var(--text-main); display: none; }
+
+    /* Buttons */
+    .btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+    .btn:hover { background: var(--primary-hover); }
+    .btn-secondary { background: #e2e8f0; color: var(--text-main); }
+    .btn-secondary:hover { background: #cbd5e1; }
+
+    /* Feedback */
+    .feedback { padding: 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; margin-top: 8px; display: none; }
+    .feedback.success { background: #dcfce7; color: #15803d; }
+    .feedback.error { background: #fef2f2; color: #991b1b; }
+
+    /* Utilities */
+    .hidden { display: none !important; }
+    .flex-row { display: flex; gap: 10px; align-items: center; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="brand" onclick="showView('dashboard')">🇩🇪 DeutschLernen A2 → B1</div>
+    <nav>
+      <button class="nav-btn active" id="nav-dash" onclick="showView('dashboard')">🏠 Startseite</button>
+      <button class="nav-btn" id="nav-topics" onclick="showView('dashboard')">📚 Themen</button>
+      <button class="nav-btn" id="nav-random" onclick="startRandomPractice()">🎲 Zufällige Übung</button>
+      <button class="nav-btn" id="nav-speak" onclick="startSpeakingChallenge()">🗣️ Sprechen</button>
+      <button class="nav-btn" id="nav-progress" onclick="showView('progress')">📊 Fortschritt</button>
+    </nav>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <!-- DASHBOARD VIEW -->
+  <main id="view-dashboard">
+    <div class="card" style="margin-bottom: 20px;">
+      <div class="card-header" style="border:none; padding:0; margin:0;">
+        <div class="card-title">Übersicht & Kursfortschritt</div>
+      </div>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-top:4px;">Wähle eines der 30 Themen aus, um dein aktives Deutsch systematisch von A2 bis B1 zu verbessern.</p>
+    </div>
+
+    <div class="level-section-title">📌 Level A2 (1–12)</div>
+    <div class="topic-grid" id="grid-a2"></div>
+
+    <div class="level-section-title">🚀 Level A2+ (13–20)</div>
+    <div class="topic-grid" id="grid-a2p"></div>
+
+    <div class="level-section-title">🎓 Level B1 (21–30)</div>
+    <div class="topic-grid" id="grid-b1"></div>
+  </main>
+
+  <!-- TOPIC LESSON VIEW -->
+  <main id="view-topic" class="hidden">
+    <button class="back-btn" onclick="showView('dashboard')">← Zurück zu den Themen</button>
+    
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title" id="lesson-title">Thema</div>
+          <span class="badge" id="lesson-level">A2</span>
+        </div>
+      </div>
+
+      <!-- 1. Wortschatz -->
+      <section class="lesson-section">
+        <div class="section-heading">📚 Wortschatz</div>
+        <div class="vocab-grid" id="lesson-vocab"></div>
+      </section>
+
+      <!-- 2. Useful Chunks -->
+      <section class="lesson-section">
+        <div class="section-heading">💬 Nützliche Sätze</div>
+        <div class="chunk-list" id="lesson-chunks"></div>
+      </section>
+
+      <!-- 3. Grammar -->
+      <section class="lesson-section">
+        <div class="section-heading">🧠 Grammatik Focus</div>
+        <div class="grammar-box" id="lesson-grammar"></div>
+      </section>
+
+      <!-- 4. Sentence Builder -->
+      <section class="lesson-section">
+        <div class="section-heading">🔤 Satzbau</div>
+        <div id="lesson-sb"></div>
+      </section>
+
+      <!-- 5. Dialogue -->
+      <section class="lesson-section">
+        <div class="section-heading">💬 Interaktiver Dialog</div>
+        <div class="chat-box" id="lesson-dialogue-chat"></div>
+        <div class="dialogue-opts" id="lesson-dialogue-opts"></div>
+      </section>
+
+      <!-- 6. Speaking Prompt -->
+      <section class="lesson-section">
+        <div class="section-heading">🗣️ Sprechaufgabe</div>
+        <div class="speaking-card">
+          <div class="speaking-prompt" id="speaking-prompt-text"></div>
+          <div style="font-size:0.85rem; color:var(--text-muted);" id="speaking-instruction"></div>
+          
+          <div style="margin-top:10px; font-size:0.85rem; font-weight:700;">Leitfragen & Hinweise:</div>
+          <ul class="hints-list" id="speaking-hints"></ul>
+
+          <div style="margin-top:10px; font-size:0.85rem; font-weight:700;">Nützliche Ausdrücke:</div>
+          <div id="speaking-expressions" style="font-size:0.85rem; color:var(--text-main); margin-bottom:12px;"></div>
+
+          <button class="btn btn-secondary" onclick="toggleModelAnswer()">Beispielantwort anzeigen</button>
+
+          <div class="model-answer-box" id="model-answer-box"></div>
+        </div>
+      </section>
+
+      <!-- 7. Review Section -->
+      <section class="lesson-section">
+        <div class="section-heading">🔄 Wiederholung</div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;">Review topic progress and complete lesson.</p>
+        <button class="btn" onclick="completeTopic()">Thema als abgeschlossen markieren 🎉</button>
+      </section>
+    </div>
+  </main>
+
+  <!-- RANDOM PRACTICE VIEW -->
+  <main id="view-random" class="hidden">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🎲 Zufällige Übung (Mixed Recall)</div>
+      </div>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">Verbinde Wortschatz und Situationen aus verschiedenen Themen für aktiven Rückruf!</p>
+      
+      <div id="random-content" class="grammar-box" style="background:white; border-color:var(--border);">
+        <!-- Generated randomly -->
+      </div>
+      <button class="btn" style="margin-top:16px;" onclick="generateRandomPractice()">Nächste Zufallsaufgabe 🎲</button>
+    </div>
+  </main>
+
+  <!-- SPEAKING CHALLENGE VIEW -->
+  <main id="view-speaking" class="hidden">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🗣️ Speaking Challenge Mode</div>
+      </div>
+      <div id="spk-challenge-card" class="speaking-card" style="background:white; border-color:var(--border);">
+        <!-- Prompt rendered -->
+      </div>
+    </div>
+  </main>
+
+  <!-- PROGRESS VIEW -->
+  <main id="view-progress" class="hidden">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📊 Mein Fortschritt</div>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:14px;">
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:16px; border-radius:12px; text-align:center;">
+          <div style="font-size:1.8rem; font-weight:800; color:var(--primary);" id="st-topics">0 / 30</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Themen Abgeschlossen</div>
+        </div>
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:16px; border-radius:12px; text-align:center;">
+          <div style="font-size:1.8rem; font-weight:800; color:var(--success);" id="st-vocab">0</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Bekannte Wörter</div>
+        </div>
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:16px; border-radius:12px; text-align:center;">
+          <div style="font-size:1.8rem; font-weight:800; color:var(--accent);" id="st-sentence">0</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Satzbau Übungen</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  // App State Tracking
+  let userProgress = {
+    completedTopics: {},
+    knownVocab: 0,
+    sbCount: 0
+  };
+
+  let currentTopicId = null;
+  let currentRandomTopic = null;
+
+  // Global Variables for Challenge Timer Mode
+  let challengeTimerInterval = null;
+  let challengeSecondsLeft = 60;
+  let currentChallengeTopic = null;
+
+  // 30 COMPLETE UNIQUE TOPICS DATA ARCHITECTURE (SOURCE OF TRUTH)
+  const topicsData = {
+    // ----------------------------------------------------
+    // LEVEL A2: CONCRETE EVERYDAY SITUATIONS
+    // ----------------------------------------------------
+    1: {
+      id: "alltag",
+      title: "1. Alltag und Routinen",
+      level: "A2",
+      desc: "Über deinen Tagesablauf und deine Gewohnheiten sprechen.",
+      vocab: [
+        { de: "der Tagesablauf", en: "daily routine", ex: "Mein Tagesablauf ist gut strukturiert." },
+        { de: "aufstehen", en: "to get up", ex: "Ich stehe jeden Morgen pünktlich auf." },
+        { de: "sich entspannen", en: "to relax", ex: "Nach der Arbeit entspanne ich mich auf dem Sofa." },
+        { de: "der Feierabend", en: "end of working day", ex: "Um 17 Uhr habe ich endlich Feierabend." },
+        { de: "beschäftigt", en: "busy", ex: "Heute bin ich sehr beschäftigt." },
+        { de: "verbringen", en: "to spend time", ex: "Ich verbringe viel Zeit mit meiner Familie." },
+        { de: "die Gewohnheit", en: "habit", ex: "Gute Gewohnheiten helfen im Alltag." },
+        { de: "pünktlich", en: "punctual", ex: "Er kommt immer pünktlich zur Arbeit." },
+        { de: "einschlafen", en: "to fall asleep", ex: "Ich kann abends sehr schnell einschlafen." },
+        { de: "aufwachen", en: "to wake up", ex: "Morgens wache ich um 6 Uhr auf." }
+      ],
+      chunks: [
+        { de: "Normalerweise stehe ich um ... auf.", en: "Normally I get up at ..." },
+        { de: "Nach der Arbeit mache ich meistens ...", en: "After work I usually do ..." },
+        { de: "Ich habe die Erfahrung gemacht, dass ...", en: "I have found from experience that ..." }
+      ],
+      grammar: {
+        title: "Trennbare Verben und Nebensätze mit weil",
+        text: "In Hauptsätzen steht die Verb-Vorsilbe am Ende (<em>aufstehen → Ich stehe auf</em>). In Nebensätzen mit <em>weil</em> wandert das konjugierte Verb ganz ans Satzende.",
+        examples: [
+          "Ich stehe um 7 Uhr auf.",
+          "Ich trinke Kaffee, weil ich müde bin."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "stehe", "jeden", "Morgen", "um", "7", "Uhr", "auf."],
+          target: "Ich stehe jeden Morgen um 7 Uhr auf.",
+          translation: "I get up at 7 o'clock every morning."
+        },
+        {
+          words: ["Ich", "trinke", "Kaffee,", "weil", "ich", "müde", "bin."],
+          target: "Ich trinke Kaffee, weil ich müde bin.",
+          translation: "I drink coffee because I am tired."
+        }
+      ],
+      dialogue: {
+        title: "Über den Tagesablauf sprechen",
+        lines: [
+          { speaker: "Partner", text: "Wann stehst du morgens normalerweise auf?" },
+          { options: [{ text: "Ich stehe meistens um 6:30 Uhr auf.", next: 1 }] },
+          { speaker: "Partner", text: "Und was machst du nach der Arbeit?" },
+          { options: [{ text: "Nach der Arbeit koche ich etwas und entspanne mich.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Wie sieht dein normaler Tagesablauf aus? Warum ist eine gute Routine wichtig für dich?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Wann stehst du auf?",
+          "Was machst du morgens?",
+          "Was machst du nach der Arbeit?",
+          "Warum ist Routine wichtig?"
+        ],
+        usefulExpressions: [
+          "Normalerweise ...",
+          "Zuerst ..., danach ...",
+          "Ich finde ... wichtig, weil ..."
+        ],
+        exampleAnswer: "Normalerweise stehe ich um 6:30 Uhr auf. Zuerst dusche ich und frühstücke. Danach beginne ich mit der Arbeit oder mit dem Lernen. Am Nachmittag mache ich meistens eine kurze Pause. Nach der Arbeit gehe ich manchmal ins Fitnessstudio oder treffe Freunde. Abends koche ich etwas und entspanne mich. Ich finde eine gute Routine wichtig, weil ich meinen Tag dadurch besser organisieren kann. Wenn ich einen festen Tagesablauf habe, bin ich meistens produktiver und habe weniger Stress."
+      }
+    },
+
+    2: {
+      id: "familie",
+      title: "2. Familie und Freunde",
+      level: "A2",
+      desc: "Personen beschreiben und persönliche Beziehungen erklären.",
+      vocab: [
+        { de: "der Verwandte", en: "relative", ex: "An Feiertagen besuchen wir alle Verwandten." },
+        { de: "die Freundschaft", en: "friendship", ex: "Eine gute Freundschaft ist ein wichtiges Geschenk." },
+        { de: "sich verstehen mit", en: "to get along with", ex: "Ich verstehe mich sehr gut mit meiner Schwester." },
+        { de: "unterstützen", en: "to support", ex: "Meine Eltern unterstützen mich bei meinen Plänen." },
+        { de: "die Eigenschaft", en: "trait / characteristic", ex: "Ehrlichkeit ist eine wichtige Eigenschaft." },
+        { de: "verlässlich", en: "reliable", ex: "Mein bester Freund ist stets verlässlich." },
+        { de: "die Kindheit", en: "childhood", ex: "Wir kennen uns schon seit unserer Kindheit." },
+        { de: "zusammenhalten", en: "to stick together", ex: "In schweren Zeiten müssen wir zusammenhalten." },
+        { de: "aufwachsen", en: "to grow up", ex: "Ich bin in einer kleinen Stadt aufgewachsen." },
+        { de: "die Beziehung", en: "relationship", ex: "Eine gute Beziehung braucht viel Vertrauen." }
+      ],
+      chunks: [
+        { de: "Ich kenne ihn/sie seit ...", en: "I've known him/her since ..." },
+        { de: "Am wichtigsten an einem Freund ist ...", en: "The most important thing in a friend is ..." },
+        { de: "Wir verstehen uns super mit ...", en: "We get along great with ..." }
+      ],
+      grammar: {
+        title: "Possessivartikel im Dativ und Akkusativ",
+        text: "Die Endung des Possessivartikels verändert sich je nach Kasus (<em>mit meinem Bruder</em> [Dativ], <em>für meine Schwester</em> [Akkusativ]).",
+        examples: [
+          "Ich fahre mit meinem Bruder zum Sport.",
+          "Ich kaufe ein Geschenk für meine Schwester."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "verstehe", "mich", "sehr", "gut", "mit", "meiner", "Familie."],
+          target: "Ich verstehe mich sehr gut mit meiner Familie.",
+          translation: "I get along very well with my family."
+        },
+        {
+          words: ["Mein", "bester", "Freund", "ist", "sehr", "verlässlich."],
+          target: "Mein bester Freund ist sehr verlässlich.",
+          translation: "My best friend is very reliable."
+        }
+      ],
+      dialogue: {
+        title: "Über Freunde sprechen",
+        lines: [
+          { speaker: "Partner", text: "Beschreibe deinen besten Freund." },
+          { options: [{ text: "Mein bester Freund ist sehr verlässlich und hilfsbereit.", next: 1 }] },
+          { speaker: "Partner", text: "Wie lange kennt ihr euch schon?" },
+          { options: [{ text: "Wir kennen uns schon seit unserer Kindheit.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Beschreibe eine Person aus deiner Familie oder einen guten Freund. Was macht ihr gerne zusammen?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Wer ist die Person?",
+          "Welche Eigenschaften hat sie?",
+          "Was macht ihr am Wochenende zusammen?"
+        ],
+        usefulExpressions: [
+          "Ich möchte ... beschreiben",
+          "Wir kennen uns seit ...",
+          "Ich schätze an ihm/ihr, dass ..."
+        ],
+        exampleAnswer: "Ich möchte meinen besten Freund Thomas beschreiben. Er ist sehr sympathisch, hilfsbereit und hat immer gute Laune. Wir kennen uns schon seit der Schulzeit. Am Wochenende treffen wir uns oft, um gemeinsam Sport zu machen oder einfach einen Kaffee zu trinken. Manchmal kochen wir auch zusammen bei mir zu Hause. Ich schätze unsere Freundschaft sehr, weil ich mit ihm über alles sprechen kann und wir immer viel zusammen lachen."
+      }
+    },
+
+    3: {
+      id: "essen",
+      title: "3. Essen und Restaurant",
+      level: "A2",
+      desc: "Im Restaurant bestellen und über Ernährung sprechen.",
+      vocab: [
+        { de: "die Speisekarte", en: "menu", ex: "Könnten Sie mir bitte die Speisekarte bringen?" },
+        { de: "der Hauptgang", en: "main course", ex: "Als Hauptgang wähle ich gegrillten Fisch." },
+        { de: "die Vorspeise", en: "starter / appetizer", ex: "Wir bestellen eine Suppe als Vorspeise." },
+        { de: "das Trinkgeld", en: "tip", ex: "Der Kellner war sehr nett, ich gebe Trinkgeld." },
+        { de: "empfehlen", en: "to recommend", ex: "Was können Sie uns heute empfehlen?" },
+        { de: "köstlich", en: "delicious", ex: "Das Essen in diesem Restaurant ist köstlich." },
+        { de: "die Zutat", en: "ingredient", ex: "Für dieses Rezept brauche ich frische Zutaten." },
+        { de: "vegetarisch", en: "vegetarian", ex: "Haben Sie auch vegetarische Gerichte?" },
+        { de: "der Nachtisch", en: "dessert", ex: "Zum Nachtisch esse ich gerne ein Eis." },
+        { de: "bestellen", en: "to order", ex: "Möchten Sie jetzt bestellen?" }
+      ],
+      chunks: [
+        { de: "Ich hätte gern ...", en: "I would like to have ..." },
+        { de: "Könnten wir bitte die Rechnung bekommen?", en: "Could we please get the bill?" },
+        { de: "Was können Sie empfehlen?", en: "What can you recommend?" }
+      ],
+      grammar: {
+        title: "Konjunktiv II für höfliche Bitten",
+        text: "Mit den Formen <em>hätte</em> und <em>würde</em> formuliert man Höflichkeitsformen im Kundenservice oder Restaurant.",
+        examples: [
+          "Ich hätte gern einen Salat.",
+          "Würden Sie uns bitte zahlen lassen?"
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "hätte", "gern", "einen", "Salat", "als", "Vorspeise."],
+          target: "Ich hätte gern einen Salat als Vorspeise.",
+          translation: "I would like a salad as an appetizer."
+        },
+        {
+          words: ["Könnten", "Sie", "uns", "bitte", "die", "Speisekarte", "bringen?"],
+          target: "Könnten Sie uns bitte die Speisekarte bringen?",
+          translation: "Could you please bring us the menu?"
+        }
+      ],
+      dialogue: {
+        title: "Bestellung im Restaurant",
+        lines: [
+          { speaker: "Kellner", text: "Guten Abend! Was möchten Sie bestellen?" },
+          { options: [{ text: "Ich hätte gern den Fisch mit Gemüse als Hauptgang.", next: 1 }] },
+          { speaker: "Kellner", text: "Möchten Sie auch einen Nachtisch?" },
+          { options: [{ text: "Nein danke, aber bringen Sie mir bitte die Rechnung.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Was isst du am liebsten und wie oft gehst du im Restaurant essen?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Was ist dein Lieblingsgericht?",
+          "Kochst du lieber selbst?",
+          "Gibst du meistens Trinkgeld?"
+        ],
+        usefulExpressions: [
+          "Ich esse am liebsten ...",
+          "Unter der Woche koche ich ...",
+          "Wenn ich ins Restaurant gehe, ..."
+        ],
+        exampleAnswer: "Ich esse am liebsten italienisches Essen, besonders Pizza und Frische Pasta. Unter der Woche koche ich meistens selbst zu Hause, weil das gesünder und günstiger ist. Aber am Wochenende gehe ich gerne mit Freunden in ein schönes Restaurant. Wir bestellen meistens eine Vorspeise und danach einen Hauptgang. Wenn die Bedienung freundlich ist, gebe ich auch immer ein gutes Trinkgeld. Essen ist für mich nicht nur Verpflegung, sondern auch Genuss."
+      }
+    },
+
+    4: {
+      id: "einkaufen",
+      title: "4. Einkaufen",
+      level: "A2",
+      desc: "Supermarkt, Angebote, Wochenmarkt und Preise vergleichen.",
+      vocab: [
+        { de: "der Supermarkt", en: "supermarket", ex: "Ich kaufe Lebensmittel im Supermarkt." },
+        { de: "das Angebot", en: "special offer / deal", ex: "Diese Woche sind Äpfel im Angebot." },
+        { de: "der Einkaufszettel", en: "shopping list", ex: "Ich schreibe immer einen Einkaufszettel." },
+        { de: "die Qualität", en: "quality", ex: "Ich achte beim Kauf auf gute Qualität." },
+        { de: "der Wochenmarkt", en: "weekly market", ex: "Auf dem Wochenmarkt gibt es frisches Gemüse." },
+        { de: "die Verpackung", en: "packaging", ex: "Ich kaufe Produkte ohne Plastikverpackung." },
+        { de: "verbrauchen", en: "to consume / use", ex: "Wir verbrauchen wöchentlich viel Milch." },
+        { de: "preiswert", en: "good value / inexpensive", ex: "Dieses Geschäft ist sehr preiswert." },
+        { de: "der Rabatt", en: "discount", ex: "Heute gibt es 20 Prozent Rabatt." },
+        { de: "wiegen", en: "to weigh", ex: "Ich muss das Obst erst wiegen." }
+      ],
+      chunks: [
+        { de: "Ich mache einmal pro Woche einen Großeinkauf.", en: "I do a big grocery shopping once a week." },
+        { de: "Wie viel kostet ...?", en: "How much does ... cost?" },
+        { de: "Ich achte sehr auf die Preise.", en: "I pay close attention to prices." }
+      ],
+      grammar: {
+        title: "Pluralformen und Mengenangaben mit Akkusativ",
+        text: "Mengenangaben stehen oft ohne Präposition mit Nomen im Akkusativ oder im Plural.",
+        examples: [
+          "Ich kaufe ein Kilo Äpfel.",
+          "Haben Sie zwei Packungen Reis?"
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "kaufe", "Obst", "auf", "dem", "Wochenmarkt."],
+          target: "Ich kaufe Obst auf dem Wochenmarkt.",
+          translation: "I buy fruit at the weekly market."
+        },
+        {
+          words: ["Achten", "Sie", "beim", "Einkaufen", "auf", "die", "Preise?"],
+          target: "Achten Sie beim Einkaufen auf die Preise?",
+          translation: "Do you pay attention to prices when shopping?"
+        }
+      ],
+      dialogue: {
+        title: "Im Supermarkt",
+        lines: [
+          { speaker: "Verkäufer", text: "Kann ich Ihnen helfen?" },
+          { options: [{ text: "Ja bitte, wo finde ich die frischen Milchprodukte?", next: 1 }] },
+          { speaker: "Verkäufer", text: "Die stehen hinten im Regal im Angebot." },
+          { options: [{ text: "Vielen Dank, ich nehme zwei Packungen.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Wo kaufst du normalerweise deine Lebensmittel ein und worauf achtest du beim Einkaufen?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Gehst du in den Supermarkt oder auf den Markt?",
+          "Schreibst du eine Liste?",
+          "Vermeidest du Plastik?"
+        ],
+        usefulExpressions: [
+          "Ich kaufe meistens in ... ein",
+          "Ich achte vor allem auf ...",
+          "Um Geld zu sparen, ..."
+        ],
+        exampleAnswer: "Ich kaufe meine Lebensmittel meistens im Supermarkt in der Nähe meiner Wohnung ein. Einmal pro Woche mache ich einen großen Einkauf mit einem Einkaufszettel. Ich achte sehr auf die Preise und die Qualität der Produkte. Obst und Gemüse kaufe ich am liebsten frisch auf dem Wochenmarkt, wenn ich Zeit habe. Ich versuche auch, nicht zu viele Verpackungen zu verbrauchen, um Plastikmüll zu vermeiden."
+      }
+    },
+
+    5: {
+      id: "wohnen",
+      title: "5. Wohnen und Haushalt",
+      level: "A2",
+      desc: "Räume beschreiben, Einrichten und Haushalt erledigen.",
+      vocab: [
+        { de: "die Dreizimmerwohnung", en: "three-room apartment", ex: "Wir wohnen in einer hellen Dreizimmerwohnung." },
+        { de: "der Stock", en: "floor / story", ex: "Meine Wohnung liegt im zweiten Stock." },
+        { de: "das Wohnzimmer", en: "living room", ex: "Im Wohnzimmer steht ein gemütliches Sofa." },
+        { de: "der Balkon", en: "balcony", ex: "Im Sommer sitze ich gerne auf dem Balkon." },
+        { de: "der Haushalt", en: "household", ex: "Wir teilen uns die Aufgaben im Haushalt." },
+        { de: "saugen", en: "to vacuum", ex: "Samstags muss ich den Teppich saugen." },
+        { de: "der Rückzugsort", en: "retreat / place to relax", ex: "Mein Schlafzimmer ist mein Rückzugsort." },
+        { de: "sich wohlfühlen", en: "to feel comfortable", ex: "Ich fühle mich in meiner Wohnung sehr wohl." },
+        { de: "einrichten", en: "to furnish / set up", ex: "Wir haben die Wohnung modern eingerichtet." },
+        { de: "die Miete", en: "rent", ex: "Die Miete ist jeden Monat zu zahlen." }
+      ],
+      chunks: [
+        { de: "Ich wohne im ... Stock.", en: "I live on the ... floor." },
+        { de: "In meiner Freizeit passe ich das Haus an.", en: "In my free time I make improvements to the house." },
+        { de: "Mein Zuhause ist ein Rückzugsort.", en: "My home is a place of retreat." }
+      ],
+      grammar: {
+        title: "Wechselpräpositionen mit Dativ und Akkusativ",
+        text: "Positionsangaben (Wo?) stehen mit Dativ. Richtungsangaben (Wohin?) stehen mit Akkusativ.",
+        examples: [
+          "Das Bild hängt an der Wand (Dativ).",
+          "Ich hänge das Bild an die Wand (Akkusativ)."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "wohne", "in", "einer", "schönen", "Wohnung."],
+          target: "Ich wohne in einer schönen Wohnung.",
+          translation: "I live in a beautiful apartment."
+        },
+        {
+          words: ["Im", "Sommer", "sitze", "ich", "gern", "auf", "dem", "Balkon."],
+          target: "Im Sommer sitze ich gern auf dem Balkon.",
+          translation: "In summer I like to sit on the balcony."
+        }
+      ],
+      dialogue: {
+        title: "Wohnungsbesichtigung",
+        lines: [
+          { speaker: "Vermieter", text: "Gefällt Ihnen die Wohnung?" },
+          { options: [{ text: "Ja, besonders das große Wohnzimmer und der Balkon gefallen mir sehr.", next: 1 }] },
+          { speaker: "Vermieter", text: "Die Miete beträgt 800 Euro kalt." },
+          { options: [{ text: "Das passt in mein Budget. Wann kann ich einziehen?", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Beschreibe deine Wohnung oder dein Haus. Was gefällt dir besonders gut an deinem Zuhause?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Wie viele Räume hat deine Wohnung?",
+          "Welcher Raum ist dein Lieblingsraum?",
+          "Wie teilt ihr den Haushalt?"
+        ],
+        usefulExpressions: [
+          "Ich wohne in ...",
+          "Besonders gut gefällt mir ...",
+          "Im Haushalt teile ich ..."
+        ],
+        exampleAnswer: "Ich wohne in einer Dreizimmerwohnung im zweiten Stock. Die Wohnung hat ein großes Wohnzimmer, ein gemütliches Schlafzimmer, eine Küche und ein Bad. Besonders gut gefällt mir der Balkon, weil dort viel Sonne scheint und ich im Sommer draußen sitzen kann. Im Haushalt teile ich die Aufgaben: Ich sauge die Wohnung und putze das Bad, während mein Partner kocht. Mein Zuhause ist mein Rückzugsort, an dem ich mich wohlfühle."
+      }
+    },
+
+    6: {
+      id: "freizeit",
+      title: "6. Freizeit und Hobbys",
+      level: "A2",
+      desc: "Sport, Wochenendaktivitäten und Natur genießen.",
+      vocab: [
+        { de: "das Hobby", en: "hobby", ex: "Mein liebstes Hobby ist Malen." },
+        { de: "die Natur", en: "nature", ex: "Am Wochenende spaziere ich in der Natur." },
+        { de: "der Ausgleich", en: "balance / relief", ex: "Sport ist ein toller Ausgleich zur Arbeit." },
+        { de: "schwimmen", en: "to swim", ex: "Im Sommer gehe ich oft im See schwimmen." },
+        { de: "das Fitnessstudio", en: "gym", ex: "Ich trainiere zweimal pro Woche im Fitnessstudio." },
+        { de: "lesen", en: "to read", ex: "Abends lese ich ein spannendes Buch." },
+        { de: "wandern", en: "to hike", ex: "Im Urlaub wandern wir gerne in den Bergen." },
+        { de: "sich erholen", en: "to recover / unwind", ex: "Im Urlaub kann ich mich gut erholen." },
+        { de: "das Wochenende", en: "weekend", ex: "Am Wochenende schlafe ich gerne lange." },
+        { de: "die Entspannung", en: "relaxation", ex: "Musik hilft mir zur Entspannung." }
+      ],
+      chunks: [
+        { de: "In meiner Freizeit mache ich am liebsten ...", en: "In my free time I like best to do ..." },
+        { de: "Das ist ein guter Ausgleich zur Arbeit.", en: "That is a good balance to work." },
+        { de: "Ich treibe regelmäßig Sport.", en: "I do sports regularly." }
+      ],
+      grammar: {
+        title: "Satzstellung bei Zeitangaben am Satzanfang",
+        text: "Steht eine Zeitangabe auf Position 1 im Satz, folgt sofort das konjugierte Verb auf Position 2 (Inversion).",
+        examples: [
+          "Am Wochenende gehe ich im Park spazieren.",
+          "Heute Abend schaue ich einen Film."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Am", "Wochenende", "fahre", "ich", "oft", "Fahrrad."],
+          target: "Am Wochenende fahre ich oft Fahrrad.",
+          translation: "On weekends I often ride a bicycle."
+        },
+        {
+          words: ["Sport", "ist", "ein", "guter", "Ausgleich", "zur", "Arbeit."],
+          target: "Sport ist ein guter Ausgleich zur Arbeit.",
+          translation: "Sports are a good balance to work."
+        }
+      ],
+      dialogue: {
+        title: "Wochenendpläne",
+        lines: [
+          { speaker: "Freund", text: "Was machst du am Wochenende?" },
+          { options: [{ text: "Ich gehe am Samstag im Park spazieren und danach schwimmen.", next: 1 }] },
+          { speaker: "Freund", text: "Möchtest du am Sonntag zusammen ins Kino gehen?" },
+          { options: [{ text: "Ja gerne, das klingt nach einem super Plan!", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Was machst du gerne in deiner Freizeit zum Entspannen?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Welche Hobbys hast du?",
+          "Machst du lieber Sport oder liest du?",
+          "Gehst du gerne in die Natur?"
+        ],
+        usefulExpressions: [
+          "In meiner Freizeit ...",
+          "Wenn ich mich entspannen will, ...",
+          "Für mich ist Hobby ..."
+        ],
+        exampleAnswer: "In meiner Freizeit habe ich verschiedene Hobbys. Wenn ich mich nach einem langen Tag entspannen möchte, lese ich ein Buch oder höre Musik. Am Wochenende bin ich am liebsten in der Natur. Ich gehe oft im Park spazieren oder fahre mit dem Fahrrad durch den Wald. Sport ist mir auch wichtig, deshalb schwimme ich einmal pro Woche. Hobbys sind für mich der perfekte Ausgleich zur Arbeit."
+      }
+    },
+
+    7: {
+      id: "arbeit",
+      title: "7. Arbeit und Beruf",
+      level: "A2",
+      desc: "Arbeitsplatz, Büro, Aufgaben und Kollegium.",
+      vocab: [
+        { de: "der Projektmanager", en: "project manager", ex: "Er arbeitet als Projektmanager bei einer Softwarefirma." },
+        { de: "die Kontrolle", en: "checking / control", ex: "Die Kontrolle der E-Mails dauert morgens 30 Minuten." },
+        { de: "das Team-Meeting", en: "team meeting", ex: "Um 10 Uhr haben wir ein kurzes Team-Meeting." },
+        { de: "die Besprechung", en: "meeting / conference", ex: "Die Besprechung findet im Konferenzraum statt." },
+        { de: "der Bericht", en: "report", ex: "Ich muss bis Freitag einen Bericht schreiben." },
+        { de: "abwechslungsreich", en: "varied / diverse", ex: "Meine Aufgaben im Büro sind sehr abwechslungsreich." },
+        { de: "die Pünktlichkeit", en: "punctuality", ex: "Pünktlichkeit ist in dieser Firma sehr wichtig." },
+        { de: "der Kollege", en: "colleague", ex: "Ich verstehe mich gut mit meinen Kollegen." },
+        { de: "die Arbeitszeit", en: "working hours", ex: "Meine Arbeitszeit beginnt um 8 Uhr." },
+        { de: "die Aufgabe", en: "task / duty", ex: "Welche Aufgaben haben Sie heute erledigt?" }
+      ],
+      chunks: [
+        { de: "Mein Arbeitstag beginnt um ...", en: "My workday starts at ..." },
+        { de: "Ich bin zuständig für ...", en: "I am responsible for ..." },
+        { de: "In meinem Job ist ... wichtig.", en: "In my job, ... is important." }
+      ],
+      grammar: {
+        title: "Modalverben im Präsens",
+        text: "Modalverben (<em>müssen, können, sollen, wollen, dürfen</em>) stehen konjugiert an Position 2. Der Infinitiv steht ganz am Satzende.",
+        examples: [
+          "Ich muss jeden Morgen E-Mails beantworten.",
+          "Wir können heute früher nach Hause gehen."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "muss", "jeden", "Morgen", "E-Mails", "kontrollieren."],
+          target: "Ich muss jeden Morgen E-Mails kontrollieren.",
+          translation: "I have to check emails every morning."
+        },
+        {
+          words: ["Meine", "Aufgaben", "im", "Büro", "sind", "sehr", "abwechslungsreich."],
+          target: "Meine Aufgaben im Büro sind sehr abwechslungsreich.",
+          translation: "My tasks in the office are very varied."
+        }
+      ],
+      dialogue: {
+        title: "Im Büro",
+        lines: [
+          { speaker: "Kollege", text: "Hast du Zeit für unser Team-Meeting?" },
+          { options: [{ text: "Ja, ich komme sofort. Ich muss nur kurz diesen Bericht fertigschreiben.", next: 1 }] },
+          { speaker: "Kollege", text: "Besprechen wir die neuen Kundenprojekte?" },
+          { options: [{ text: "Genau, das ist das Hauptthema für heute.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Was bist du von Beruf und wie sieht dein typischer Arbeitsalltag aus?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Was ist deine Berufsbezeichnung?",
+          "Wann fängst du an zu arbeiten?",
+          "Was gefällt dir an deinen Aufgaben?"
+        ],
+        usefulExpressions: [
+          "Ich arbeite als ...",
+          "Mein Arbeitstag beginnt mit ...",
+          "Ich finde meinen Beruf ..., weil ..."
+        ],
+        exampleAnswer: "Ich arbeite als Projektmanager in einer IT-Firma. Mein Arbeitstag beginnt meistens um 8:30 Uhr mit der Kontrolle meiner E-Mails. Danach habe ich ein kurzes Team-Meeting, um die Aufgaben des Tages zu besprechen. Den Rest des Tages schreibe ich Berichte und telefoniere mit Kunden. Ich finde meinen Beruf interessant, weil die Aufgaben abwechslungsreich sind und ich tolle Kollegen habe. Pünktlichkeit und gute Kommunikation sind in meinem Job sehr wichtig."
+      }
+    },
+
+    8: {
+      id: "reisen",
+      title: "8. Reisen und Urlaub",
+      level: "A2",
+      desc: "Reiseziele, Verkehrsmittel und Kulturen besichtigen.",
+      vocab: [
+        { de: "das Verkehrsmittel", en: "means of transport", ex: "Der Zug ist mein liebstes Verkehrsmittel." },
+        { de: "besichtigen", en: "to sightsee / visit", ex: "Wir haben historische Gebäude besichtigt." },
+        { de: "die Kultur", en: "culture", ex: "Ich lerne im Ausland gerne die Kultur kennen." },
+        { de: "anstrengend", en: "exhausting / tiring", ex: "Die lange Flugreise war wirklich anstrengend." },
+        { de: "der Flug", en: "flight", ex: "Unser Flug startet morgen pünktlich." },
+        { de: "das Hotel", en: "hotel", ex: "Wir haben ein kleines Hotel am Strand gebucht." },
+        { de: "entdecken", en: "to discover", ex: "Auf Reisen kann man neue Orte entdecken." },
+        { de: "die Sehenswürdigkeit", en: "sights / tourist attraction", ex: "Die Stadt bietet viele alte Sehenswürdigkeiten." },
+        { de: "die Reise", en: "trip / journey", ex: "Gute Reise und viel Spaß!" },
+        { de: "das Ausland", en: "foreign country / abroad", ex: "Warst du schon einmal im Ausland?" }
+      ],
+      chunks: [
+        { de: "Ich bin oft mit dem ... gefahren.", en: "I often traveled by ..." },
+        { de: "Eine Reise, die mir gefallen hat, war ...", en: "A trip that I liked was ..." },
+        { de: "Ich habe Orte besichtigt.", en: "I visited places." }
+      ],
+      grammar: {
+        title: "Perfektbildung mit haben und sein bei Bewegungen",
+        text: "Verben der Fortbewegung bilden das Perfekt mit <em>sein</em> (<em>geflogen, gefahren</em>). Andere Aktivitäten nutzen <em>haben</em> (<em>besichtigt, gebucht</em>).",
+        examples: [
+          "Ich bin nach Spanien geflogen.",
+          "Wir haben ein Museum besichtigt."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "bin", "im", "Urlaub", "nach", "Spanien", "geflogen."],
+          target: "Ich bin im Urlaub nach Spanien geflogen.",
+          translation: "I flew to Spain on vacation."
+        },
+        {
+          words: ["Wir", "haben", "viele", "interessante", "Städte", "besichtigt."],
+          target: "Wir haben viele interessante Städte besichtigt.",
+          translation: "We visited many interesting cities."
+        }
+      ],
+      dialogue: {
+        title: "Im Reisebüro",
+        lines: [
+          { speaker: "Reisebüro", text: "Wohin möchten Sie dieses Jahr reisen?" },
+          { options: [{ text: "Ich möchte gerne nach Holland fahren, um die Städte zu erkunden.", next: 1 }] },
+          { speaker: "Reisebüro", text: "Möchten Sie lieber mit dem Zug fahren oder fliegen?" },
+          { options: [{ text: "Ich nehme lieber den Zug, das ist entspannter.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Welche Reise hat dir besonders gut gefallen? Wohin bist du gereist und was hast du dort gemacht?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Wohin bist du gefahren?",
+          "Wie bist du gereist?",
+          "Was hast du dort besichtigt?"
+        ],
+        usefulExpressions: [
+          "Eine Reise, die mir sehr gefallen hat ...",
+          "Ich war dort für ...",
+          "Reisen hilft mir dabei ..."
+        ],
+        exampleAnswer: "Eine Reise, die mir besonders gut gefallen hat, war meine Reise in die Niederlande. Ich war dort mehrere Monate und konnte den Alltag in einem anderen Land kennenlernen. Besonders interessant fand ich die Städte und die verschiedenen Verkehrsmittel. Ich bin oft mit dem Fahrrad oder mit dem Zug gefahren. In meiner Freizeit habe ich verschiedene Orte besichtigt und neue Leute kennengelernt. Die Reise war manchmal anstrengend, aber ich habe viel gelernt. Vor allem habe ich gemerkt, dass Reisen eine gute Möglichkeit ist, eine andere Kultur besser zu verstehen."
+      }
+    },
+
+    9: {
+      id: "gesundheit",
+      title: "9. Gesundheit und Körper",
+      level: "A2",
+      desc: "Symptome beschreiben, Arztbesuch und Wohlbefinden.",
+      vocab: [
+        { de: "die Ausgewogenheit", en: "balance / poise", ex: "Ausgewogenheit in der Ernährung schützt den Körper." },
+        { de: "das Rezept", en: "prescription / recipe", ex: "Der Arzt stellt mir ein Rezept für Tabletten aus." },
+        { de: "das Medikament", en: "medicine / medication", ex: "Ich nehme das Medikament dreimal täglich." },
+        { de: "das Symptom", en: "symptom", ex: "Fieber ist ein typisches Symptom für Grippe." },
+        { de: "sich erkälten", en: "to catch a cold", ex: "Im Winter erkälte ich mich manchmal." },
+        { de: "die Kopfschmerzen", en: "headache", ex: "Trinke Wasser, wenn du Kopfschmerzen hast." },
+        { de: "der Arzt", en: "doctor", ex: "Morgen habe ich einen Termin beim Arzt." },
+        { de: "ruhen", en: "to rest", ex: "Sie müssen sich ein paar Tage lang ruhen." },
+        { de: "das Fieber", en: "fever", ex: "Das Kind hat hohes Fieber." },
+        { de: "die Apotheke", en: "pharmacy", ex: "Ich kaufe die Medizin in der Apotheke." }
+      ],
+      chunks: [
+        { de: "Um gesund zu bleiben, ...", en: "To stay healthy, ..." },
+        { de: "Ich gehe zum Arzt, wenn ...", en: "I go to the doctor when ..." },
+        { de: "Ich trinke heißen Tee mit Honig.", en: "I drink hot tea with honey." }
+      ],
+      grammar: {
+        title: "Konditionalsätze mit wenn im Präsens",
+        text: "Im Nebensatz mit <em>wenn</em> steht das Verb am Ende. Im Hauptsatz folgt das Verb direkt auf das Komma.",
+        examples: [
+          "Wenn ich Kopfschmerzen habe, nehme ich Medizin.",
+          "Wenn man krank ist, muss man im Bett bleiben."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Wenn", "ich", "Kopfschmerzen", "habe,", "trinke", "ich", "Wasser."],
+          target: "Wenn ich Kopfschmerzen habe, trinke ich Wasser.",
+          translation: "When I have a headache, I drink water."
+        },
+        {
+          words: ["Der", "Arzt", "gibt", "mir", "ein", "Rezept", "für", "Medikamente."],
+          target: "Der Arzt gibt mir ein Rezept für Medikamente.",
+          translation: "The doctor gives me a prescription for medication."
+        }
+      ],
+      dialogue: {
+        title: "Beim Arzt",
+        lines: [
+          { speaker: "Arzt", text: "Guten Tag, was fehlt Ihnen denn?" },
+          { options: [{ text: "Guten Tag. Ich habe seit zwei Tagen starke Kopfschmerzen und Fieber.", next: 1 }] },
+          { speaker: "Arzt", text: "Ich verschreibe Ihnen ein Medikament. Ruhe Sie sich gut aus." },
+          { options: [{ text: "Danke Doktor, ich bleibe im Bett.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Was tust du, um gesund zu bleiben, und was machst du, wenn du krank bist?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Wie ernährst du dich?",
+          "Was machst du bei einer Erkältung?",
+          "Wann gehst du zum Arzt?"
+        ],
+        usefulExpressions: [
+          "Um gesund zu bleiben, ...",
+          "Wenn ich mich krank fühle, ...",
+          "Nach zwei Tagen ..."
+        ],
+        exampleAnswer: "Um gesund zu bleiben, versuche ich mich ausgewogen zu ernähren und ausreichend zu schlafen. Ich trinke viel Wasser und bewege mich täglich an der frischen Luft. Wenn ich mich doch einmal erkälte oder Kopfschmerzen habe, bleibe ich zu Hause im Bett. Ich trinke heißen Tee mit Honig und ruhe mich aus. Wenn die Symptome nach zwei Tagen nicht besser werden, gehe ich zum Arzt und hole mir ein Rezept für Medikamente."
+      }
+    },
+
+    10: {
+      id: "kleidung",
+      title: "10. Kleidung und Aussehen",
+      level: "A2",
+      desc: "Kleidung auswählen, Stil beschreiben und Einkleiden.",
+      vocab: [
+        { de: "bequem", en: "comfortable", ex: "Diese Hose ist besonders bequem." },
+        { de: "die Jeans", en: "jeans", ex: "Ich trage am liebsten blaue Jeans." },
+        { de: "das Hemd", en: "shirt", ex: "Er trägt ein weißes Hemd im Büro." },
+        { de: "die Bluse", en: "blouse", ex: "Sie kaufe eine schicke Bluse." },
+        { de: "elegant", en: "elegant / formal", ex: "Zu Festen zieht er sich elegant an." },
+        { de: "die Sportschuhe", en: "sneakers / athletic shoes", ex: "Beim Laufen trage ich weiße Sportschuhe." },
+        { de: "anziehen", en: "to wear / put on", ex: "Ich ziehe mir eine warme Jacke an." },
+        { de: "die Qualität", en: "quality", ex: "Gute Qualität ist mir bei Bekleidung wichtig." },
+        { de: "passen", en: "to fit / suit", ex: "Die Größe M passt mir perfekt." },
+        { de: "das Büro", en: "office", ex: "Im Büro müssen wir ordentliche Kleidung tragen." }
+      ],
+      chunks: [
+        { de: "Im Alltag trage ich am liebsten ...", en: "In everyday life I prefer to wear ..." },
+        { de: "Ich ziehe mich elegant an.", en: "I dress elegantly." },
+        { de: "Ich achte auf gute Qualität.", en: "I pay attention to good quality." }
+      ],
+      grammar: {
+        title: "Adjektivdeklination nach unbestimmtem Artikel im Akkusativ",
+        text: "Akkusativmaskulin verlangt die Endung -en (<em>einen neuen Pullover</em>), Feminin -e (<em>eine rote Jacke</em>), Neutral -es (<em>ein schickes Hemd</em>).",
+        examples: [
+          "Ich suche ein schickes Hemd.",
+          "Sie zieht eine dunkle Hose an."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Im", "Büro", "trage", "ich", "ein", "weißes", "Hemd."],
+          target: "Im Büro trage ich ein weißes Hemd.",
+          translation: "In the office I wear a white shirt."
+        },
+        {
+          words: ["Ich", "kaufe", "nur", "Bequeme", "Schuhe", "von", "guter", "Qualität."],
+          target: "Ich kaufe nur bequeme Schuhe von guter Qualität.",
+          translation: "I only buy comfortable shoes of good quality."
+        }
+      ],
+      dialogue: {
+        title: "Im Kleichergeschäft",
+        lines: [
+          { speaker: "Verkäuferin", text: "Suchen Sie etwas Besonderes?" },
+          { options: [{ text: "Ich suche eine bequeme Jeans für den Alltag.", next: 1 }] },
+          { speaker: "Verkäuferin", text: "Welche Größe und Farbe bevorzugen Sie?" },
+          { options: [{ text: "Größe M in Dunkelblau bitte.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Welche Kleidung trägst du am liebsten im Alltag und im Beruf?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Was ziehst du zu Hause an?",
+          "Welche Kleidungsregeln gibt es in deinem Beruf?",
+          "Welches Material/welche Farben magst du?"
+        ],
+        usefulExpressions: [
+          "Am liebsten trage ich ...",
+          "Bei der Arbeit muss ich ...",
+          "Ich kaufe Kleidung, die ..."
+        ],
+        exampleAnswer: "Im Alltag trage ich am liebsten bequeme Kleidung, zum Beispiel eine Jeans, ein T-Shirt und Sportschuhe. Die Farbe Schwarz und Blau mag ich besonders gerne. Bei der Arbeit im Büro muss ich mich etwas eleganter anziehen. Dort trage ich meistens ein Hemd oder eine Bluse mit einer dunklen Hose. Ich kaufe nicht sehr oft neue Kleidung, aber wenn ich einkaufen gehe, achte ich darauf, dass die Qualität gut ist und die Sachen bequem sitzen."
+      }
+    },
+
+    11: {
+      id: "wetter",
+      title: "11. Wetter und Jahreszeiten",
+      level: "A2",
+      desc: "Wetterbericht, Jahreszeiten und Temperaturschwankungen.",
+      vocab: [
+        { de: "die Lieblingsjahreszeit", en: "favorite season", ex: "Der Frühling ist meine Lieblingsjahreszeit." },
+        { de: "der Frühling", en: "spring", ex: "Im Frühling wird es draußen wieder warm." },
+        { de: "blühen", en: "to bloom / flower", ex: "Im Park blühen die Blumen wunderbar." },
+        { de: "ideal", en: "ideal / perfect", ex: "Das Wetter heute ist ideal für Sport." },
+        { de: "die Temperatur", en: "temperature", ex: "Die Temperaturen steigen am Nachmittag." },
+        { de: "scheinen", en: "to shine", ex: "Die Sonne scheint den ganzen Tag." },
+        { de: "der Spaziergang", en: "walk / stroll", ex: "Wir machen einen Spaziergang im Wald." },
+        { de: "die Sonne", en: "sun", ex: "Genieße die Sonne auf dem Balkon!" },
+        { de: "die Hitze", en: "heat", ex: "Die Hitze im Sommer ist manchmal extrem." },
+        { de: "der Winter", en: "winter", ex: "Im Winter schneit es oft in den Bergen." }
+      ],
+      chunks: [
+        { de: "Meine Lieblingsjahreszeit ist ...", en: "My favorite season is ..." },
+        { de: "Die Temperaturen sind ideal.", en: "The temperatures are ideal." },
+        { de: "Die Sonne scheint häufig.", en: "The sun shines frequently." }
+      ],
+      grammar: {
+        title: "Kausalkonnektor deshalb (Inversion)",
+        text: "Der Konnektor <em>deshalb</em> drückt eine Folge aus. Nach <em>deshalb</em> steht sofort das Verb auf Position 2.",
+        examples: [
+          "Es regnet, deshalb bleibe ich zu Hause.",
+          "Der Sommer ist heiß, deshalb fahre ich ans Meer."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Im", "Frühling", "blühen", "alle", "Blumen", "im", "Park."],
+          target: "Im Frühling blühen alle Blumen im Park.",
+          translation: "In spring all flowers bloom in the park."
+        },
+        {
+          words: ["Der", "Sommer", "ist", "zu", "heiß,", "deshalb", "mag", "ich", "den", "Frühling."],
+          target: "Der Sommer ist zu heiß, deshalb mag ich den Frühling.",
+          translation: "Summer is too hot, that's why I like spring."
+        }
+      ],
+      dialogue: {
+        title: "Über das Wetter sprechen",
+        lines: [
+          { speaker: "Freund", text: "Wie ist das Wetter heute bei dir?" },
+          { options: [{ text: "Die Sonne scheint und die Temperaturen sind wunderbar warm.", next: 1 }] },
+          { speaker: "Freund", text: "Wollen wir draußen einen Spaziergang machen?" },
+          { options: [{ text: "Ja klar, bei diesem Wetter bin ich sehr gerne an der frischen Luft.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Welche Jahreszeit magst du am liebsten und warum?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Warum magst du diesen Monat/diese Jahreszeit?",
+          "Wie ist das Wetter dann meistens?",
+          "Was unternimmst du bei diesem Wetter?"
+        ],
+        usefulExpressions: [
+          "Meine Lieblingsjahreszeit ist ...",
+          "Ich freue mich, wenn ...",
+          "Der Sommer ist mir oft zu ..."
+        ],
+        exampleAnswer: "Meine Lieblingsjahreszeit ist der Frühling. Nach dem kalten und dunklen Winter freue ich mich immer, wenn die Sonne wieder scheint und die Blumen blühen. Die Temperaturen sind im Frühling ideal – nicht zu heiß und nicht zu kalt. Ich bin dann viel lieber draußen unterwegs und mache Spaziergänge im Park. Der Sommer ist mir manchmal zu heiß und im Winter bin ich oft traurig wegen des schlechten Wetters, deshalb ist der Frühling perfekt."
+      }
+    },
+
+    12: {
+      id: "verkehr",
+      title: "12. Verkehr und unterwegs",
+      level: "A2",
+      desc: "Öffentlicher Nahverkehr, Autofahren und Wegstrecken.",
+      vocab: [
+        { de: "die U-Bahn", en: "underground / subway", ex: "Ich fahre täglich mit der U-Bahn." },
+        { de: "die Haltestelle", en: "bus stop / station", ex: "Die Haltestelle ist gleich um die Ecke." },
+        { de: "praktisch", en: "practical / convenient", ex: "Das Ticket auf dem Handy ist sehr praktisch." },
+        { de: "der Stau", en: "traffic jam", ex: "Morgens stehe ich oft im Stau." },
+        { de: "die Parkplätze", en: "parking spaces", ex: "In der Innenstadt gibt es kaum Parkplätze." },
+        { de: "das Verkehrsmittel", en: "vehicle / transport", ex: "Welches Verkehrsmittel nutzt du am liebsten?" },
+        { de: "nutzen", en: "to use", ex: "Wir nutzen gerne das Fahrrad." },
+        { de: "öffentlich", en: "public", ex: "Öffentliche Verkehrsmittel sind gut für die Umwelt." },
+        { de: "die Frische Luft", en: "fresh air", ex: "Fahrradfahren bringt frische Luft." },
+        { de: "entspannt", en: "relaxed", ex: "Zugfahren ist oft entspannt." }
+      ],
+      chunks: [
+        { de: "Jeden Morgen fahre ich mit ...", en: "Every morning I go with ..." },
+        { de: "Die Haltestelle ist direkt vor ...", en: "The stop is right in front of ..." },
+        { de: "Es gibt viel Stau.", en: "There is a lot of traffic congestion." }
+      ],
+      grammar: {
+        title: "Präpositionen mit Dativ bei Verkehrsmitteln",
+        text: "Verkehrsmittel mit der Präposition <em>mit</em> erfordern immer den Dativ (<em>mit dem Auto, mit der Bahn, mit den Bussen</em>).",
+        examples: [
+          "Ich fahre mit dem Bus zur Arbeit.",
+          "Er reist mit der U-Bahn an."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "fahre", "jeden", "Morgen", "mit", "der", "U-Bahn."],
+          target: "Ich fahre jeden Morgen mit der U-Bahn.",
+          translation: "I ride the subway every morning."
+        },
+        {
+          words: ["Autofahren", "ist", "teuer,", "weil", "Parkplätze", "viel", "kosten."],
+          target: "Autofahren ist teuer, weil Parkplätze viel kosten.",
+          translation: "Driving is expensive because parking spaces cost a lot."
+        }
+      ],
+      dialogue: {
+        title: "Der Arbeitsweg",
+        lines: [
+          { speaker: "Kollege", text: "Wie kommst du immer zur Arbeit?" },
+          { options: [{ text: "Ich nehme meistens die U-Bahn, weil die Haltestelle direkt bei mir ist.", next: 1 }] },
+          { speaker: "Kollege", text: "Fährst du nie mit dem Auto?" },
+          { options: [{ text: "Nein, in der Innenstadt gibt es leider zu viel Stau.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Wie kommst du jeden Tag zur Arbeit oder in die Schule und welches Verkehrsmittel nutzt du am liebsten?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Welches Verkehrsmittel wählst du morgens?",
+          "Warum fährst du nicht mit dem Auto?",
+          "Was ist am entspanntesten?"
+        ],
+        usefulExpressions: [
+          "Jeden Morgen nehme ich ...",
+          "Wenn das Wetter schön ist, ...",
+          "Das Auto nutze ich selten, weil ..."
+        ],
+        exampleAnswer: "Jeden Morgen fahre ich mit der U-Bahn zur Arbeit. Die Haltestelle ist direkt vor meinem Haus, deshalb ist das sehr praktisch. Wenn das Wetter schön ist, nehme ich aber lieber das Fahrrad, weil ich mich dann an der frischen Luft bewegen kann. Mit dem Auto fahre ich nicht gerne in der Stadt, weil es immer viel Stau gibt und die Parkplätze sehr teuer sind. Die öffentlichen Verkehrsmittel sind für mich schneller und entspannter."
+      }
+    },
+
+    // ----------------------------------------------------
+    // LEVEL A2+: PRACTICAL SITUATIONS WITH EXPLANATIONS
+    // ----------------------------------------------------
+    13: {
+      id: "lernen",
+      title: "13. Lernen und Sprachen",
+      level: "A2+",
+      desc: "Lernmethoden, Fremdsprachen und Sprachkurse nutzen.",
+      vocab: [
+        { de: "die Lernmethode", en: "learning method", ex: "Welche Lernmethode hilft dir am besten?" },
+        { de: "der Untertitel", en: "subtitle", ex: "Ich sehe deutsche Filme mit Untertiteln." },
+        { de: "die Vokabel", en: "vocabulary word", ex: "Jeden Tag lerne ich zehn neue Vokabeln." },
+        { de: "die App", en: "application / app", ex: "Auf meinem Smartphone nutze ich eine Lern-App." },
+        { de: "der Fortschritt", en: "progress", ex: "Ich mache gute Fortschritte beim Deutschlernen." },
+        { de: "unterhalten", en: "to converse / entertain", ex: "Ich möchte mich fließend auf Deutsch unterhalten." },
+        { de: "regelmäßig", en: "regular / regularly", ex: "Regelmäßiges Üben führt zum Erfolg." },
+        { de: "die Sprachkenntnisse", en: "language skills", ex: "Gute Sprachkenntnisse helfen im Beruf." },
+        { de: "die Mühe", en: "effort / trouble", ex: "Das Grammatiklernen kostet viel Mühe." },
+        { de: "der Sprachkurs", en: "language course", ex: "Ich besuche dreimal pro Woche einen Sprachkurs." }
+      ],
+      chunks: [
+        { de: "Ich lerne Deutsch, weil ...", en: "I learn German because ..." },
+        { de: "Ich habe die Erfahrung gemacht, dass ...", en: "I have experienced that ..." },
+        { de: "Obwohl die Grammatik schwer ist, ...", en: "Although grammar is difficult, ..." }
+      ],
+      grammar: {
+        title: "Nebensatzkonnektoren obwohl, dass, weil",
+        text: "Bei Subjunktionen wie <em>obwohl, dass, weil</em> steht das konjugierte Verb ausnahmslos am Satzende.",
+        examples: [
+          "Ich lerne, obwohl ich müde bin.",
+          "Ich weiß, dass Deutsch nützlich ist."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "lerne", "Deutsch,", "weil", "ich", "hier", "arbeiten", "will."],
+          target: "Ich lerne Deutsch, weil ich hier arbeiten will.",
+          translation: "I am learning German because I want to work here."
+        },
+        {
+          words: ["Obwohl", "die", "Grammatik", "schwer", "ist,", "macht", "es", "Spaß."],
+          target: "Obwohl die Grammatik schwer ist, macht es Spaß.",
+          translation: "Although the grammar is difficult, it is fun."
+        }
+      ],
+      dialogue: {
+        title: "Tipps zum Sprachenlernen",
+        lines: [
+          { speaker: "Lehrer", text: "Welche Lernmethoden helfen dir am besten beim Vokabellernen?" },
+          { options: [{ text: "Ich benutze täglich eine App auf dem Smartphone und schaue Filme mit Untertiteln.", next: 1 }] },
+          { speaker: "Lehrer", text: "Sprichst du auch regelmäßig im Alltag?" },
+          { options: [{ text: "Ich versuche es, obwohl ich manchmal noch Fehler mache.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Warum lernst du Deutsch und welche Lernmethoden funktionieren für dich am besten?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Warum brauchst du Deutsch?",
+          "Welche Medien nutzt du zum Lernen?",
+          "Wie gehst du mit Grammatikschwierigkeiten um?"
+        ],
+        usefulExpressions: [
+          "Ich lerne Deutsch, um ...",
+          "Ich habe gemerkt, dass ...",
+          "Am wichtigsten ist für mich ..."
+        ],
+        exampleAnswer: "Ich lerne Deutsch, weil ich in Deutschland arbeiten möchte und mich besser mit den Menschen hier unterhalten will. Um Vokabeln zu lernen, benutze ich täglich eine App auf meinem Smartphone. Außerdem höre ich deutsche Podcasts auf dem Weg zur Arbeit und schaue Serien mit Untertiteln. Ich habe die Erfahrung gemacht, dass regelmäßiges Sprechen am wichtigsten ist. Obwohl die Grammatik manchmal schwierig ist, macht mir das Sprachenlernen viel Spaß, weil ich jeden Tag Fortschritte sehe."
+      }
+    },
+
+    14: {
+      id: "stadtleben",
+      title: "14. Stadt und Leben in der Stadt",
+      level: "A2+",
+      desc: "Vor- und Nachteile von Urbanität und Kulturangeboten.",
+      vocab: [
+        { de: "das Kulturangebot", en: "cultural activities", ex: "Das Kulturangebot in der Großstadt ist riesig." },
+        { de: "die Anbindung", en: "transport connections", ex: "Die Wohnung hat eine direkte Anbindung an die U-Bahn." },
+        { de: "hektisch", en: "hectic", ex: "Das Leben in der Stadt ist manchmal sehr hektisch." },
+        { de: "der Nachteil", en: "disadvantage", ex: "Ein Nachteil sind die hohen Mietpreise." },
+        { de: "der Vorteil", en: "advantage", ex: "Der Vorteil ist, dass man alles schnell erreicht." },
+        { de: "das Geschäft", en: "shop / store", ex: "In der Straße gibt es viele kleine Geschäfte." },
+        { de: "die Miete", en: "rent", ex: "Die Mieten in der Innenstadt sind stark gestiegen." },
+        { de: "vorerst", en: "for now / for the time being", ex: "Ich möchte vorerst in der Stadt wohnen bleiben." },
+        { de: "die Großstadt", en: "metropolis / big city", ex: "In einer Großstadt wird es nie langweilig." },
+        { de: "die Landbevölkerung", en: "rural population", ex: "Die Landbevölkerung genießt viel Ruhe." }
+      ],
+      chunks: [
+        { de: "Ein großer Vorteil ist, dass ...", en: "A major advantage is that ..." },
+        { de: "Allerdings gibt es auch Nachteile ...", en: "However, there are also disadvantages ..." },
+        { de: "Ich schätze das Angebot sehr.", en: "I appreciate the choices very much." }
+      ],
+      grammar: {
+        title: "Kontrastierende Konnektoren jedoch, allerdings, trotzdem",
+        text: "Wörter wie <em>jedoch</em> oder <em>allerdings</em> schränken eine Aussage ein. <em>Trotzdem</em> zeigt einen Widerspruch auf.",
+        examples: [
+          "Das Leben hier ist teuer, trotzdem wohne ich gerne hier.",
+          "Die Stadt bietet viel, allerdings ist es sehr laut."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ein", "Vorteil", "ist,", "dass", "alles", "in", "der", "Nähe", "ist."],
+          target: "Ein Vorteil ist, dass alles in der Nähe ist.",
+          translation: "An advantage is that everything is close by."
+        },
+        {
+          words: ["Das", "Leben", "ist", "teuer,", "trotzdem", "wohne", "ich", "gern", "hier."],
+          target: "Das Leben ist teuer, trotzdem wohne ich gern hier.",
+          translation: "Life is expensive, nevertheless I like living here."
+        }
+      ],
+      dialogue: {
+        title: "Stadt oder Land?",
+        lines: [
+          { speaker: "Nachbar", text: "Wohne Sie lieber in der Stadt oder auf dem Land?" },
+          { options: [{ text: "Ich lebe lieber in der Stadt, weil das Kulturangebot viel besser ist.", next: 1 }] },
+          { speaker: "Nachbar", text: "Stört Sie der Lärm nicht manchmal?" },
+          { options: [{ text: "Doch, aber die Vorteile überwiegen für mich.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Lebst du lieber in einer Großstadt oder auf dem Land? Erkläre die Vor- und Nachteile.",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Was magst du an der Stadt?",
+          "Welche Nachteile gibt es auf dem Land?",
+          "Wo möchtest du in Zukunft wohnen?"
+        ],
+        usefulExpressions: [
+          "Ich lebe zurzeit in ...",
+          "Ein klarer Vorteil ist ...",
+          "Allerdings muss man beachten ..."
+        ],
+        exampleAnswer: "Ich lebe zurzeit in einer Großstadt und schätze das kulturelle Angebot sehr. Ein großer Vorteil ist, dass man alles in der Nähe hat: Supermärkte, Restaurants, Museen und eine gute Anbindung an öffentliche Verkehrsmittel. Allerdings gibt es auch Nachteile, denn das Leben in der Stadt ist oft laut, hektisch und die Mieten sind sehr hoch. Auf dem Land ist es ruhiger und sauberer, aber man braucht fast immer ein Auto. Trotz der Nachteile bleibe ich vorerst lieber in der Stadt."
+      }
+    },
+
+    15: {
+      id: "medien",
+      title: "15. Medien und Internet",
+      level: "A2+",
+      desc: "Nutzung digitaler Medien, Apps und Bildschirmzeiten.",
+      vocab: [
+        { de: "die Informationsbeschaffung", en: "obtaining information", ex: "Das Internet dient heute primär der Informationsbeschaffung." },
+        { de: "der Bildschirm", en: "screen / monitor", ex: "Ich verbringe zu viel Zeit vor dem Bildschirm." },
+        { de: "der Streaming-Dienst", en: "streaming service", ex: "Ich schaue Serien über einen Streaming-Dienst." },
+        { de: "die digitale Pause", en: "digital detox / break", ex: "Am Wochenende mache ich gerne eine digitale Pause." },
+        { de: "abrufen", en: "to access / check", ex: "Ich rufe täglich meine Nachrichten ab." },
+        { de: "die Nachrichten", en: "news", ex: "Morgens lese ich die aktuellen Nachrichten." },
+        { de: "ausdenken", en: "to invent / conceive", ex: "Manche Geschichten im Netz sind frei ausgedacht." },
+        { de: "verzichten", en: "to forgo / dispense with", ex: "Auf mein Smartphone kann ich nicht verzichten." },
+        { de: "das Netz", en: "web / net", ex: "Im Netz findet man Informationen zu jedem Thema." },
+        { de: "nutzen", en: "to use / utilize", ex: "Wir nutzen digitale Angebote jeden Tag." }
+      ],
+      chunks: [
+        { de: "Das Internet ist gar nicht mehr wegzudenken.", en: "The internet is completely indispensable now." },
+        { de: "Einerseits ist es praktisch, andererseits ...", en: "On the one hand it's practical, on the other hand ..." },
+        { de: "Ich nutze mein Handy für ...", en: "I use my phone for ..." }
+      ],
+      grammar: {
+        title: "Zweiteilige Konnektoren einerseits ..., andererseits ...",
+        text: "Zweiteilige Konnektoren verbinden zwei Gegensätze im Hauptsatzgefüge.",
+        examples: [
+          "Einerseits ist das Netz nützlich, andererseits kostet es Zeit.",
+          "Einerseits lerne ich viel, andererseits bin ich müde."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Das", "Internet", "ist", "wichtig", "für", "meinen", "ganzen", "Arbeitsalltag."],
+          target: "Das Internet ist wichtig für meinen ganzen Arbeitsalltag.",
+          translation: "The internet is important for my whole workday."
+        },
+        {
+          words: ["Abends", "versuche", "ich,", "weniger", "auf", "den", "Bildschirm", "zu", "schauen."],
+          target: "Abends versuche ich, weniger auf den Bildschirm zu schauen.",
+          translation: "In the evenings I try to look less at the screen."
+        }
+      ],
+      dialogue: {
+        title: "Medienkonsum",
+        lines: [
+          { speaker: "Kollege", text: "Wie viel Zeit verbringst du täglich am Smartphone?" },
+          { options: [{ text: "Schon einige Stunden, beruflich und privat für Streaming und Nachrichten.", next: 1 }] },
+          { speaker: "Kollege", text: "Machst du auch mal eine digitale Pause?" },
+          { options: [{ text: "Ja, am Wochenende schalte ich das Handy abends oft aus.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Wie nutzt du digitale Medien und das Internet im Alltag?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Wofür nutzt du dein Smartphone morgens?",
+          "Welche Streaming-Dienste nutzt du?",
+          "Versuchst du, weniger Zeit online zu verbringen?"
+        ],
+        usefulExpressions: [
+          "Medien sind wichtig für ...",
+          "Ich nutze digitale Angebote, um ...",
+          "Man muss aufpassen, dass ..."
+        ],
+        exampleAnswer: "Das Internet ist aus meinem Alltag gar nicht mehr wegzudenken. Ich nutze mein Smartphone morgens direkt, um Nachrichten zu lesen und den Wetterbericht zu prüfen. Beruflich arbeite ich den ganzen Tag am Computer und schreibe E-Mails. In meiner Freizeit nutze ich Streaming-Dienste für Filme oder Musik. Einerseits sind digitale Medien extrem praktisch zur Informationsbeschaffung, andererseits versuche ich abends eine digitale Pause einzulegen, um nicht ständig auf den Bildschirm zu schauen."
+      }
+    },
+
+    16: {
+      id: "feste",
+      title: "16. Feste und Traditionen",
+      level: "A2+",
+      desc: "Brauchtum, Feiertage und Familienfeste feiern.",
+      vocab: [
+        { de: "das Neujahrsfest", en: "New Year celebration", ex: "Das Neujahrsfest wird im Kreis der Familie gefeiert." },
+        { de: "die Verwandten", en: "relatives", ex: "An Weihnachten besuchen uns alle Verwandten." },
+        { de: "die Tradition", en: "tradition", ex: "Diese Tradition gibt es schon seit vielen Jahrzehnten." },
+        { de: "das Feuerwerk", en: "fireworks", ex: "Um Mitternacht bewundern wir das Feuerwerk." },
+        { de: "das Gerichtsangebot", en: "selection of dishes", ex: "Das Gerichtsangebot am Festtag ist reichhaltig." },
+        { de: "zusammenkommen", en: "to come together / gather", ex: "Alle Nachbarn kommen im Park zusammen." },
+        { de: "feiern", en: "to celebrate", ex: "Wir feiern den Geburtstag im Garten." },
+        { de: "die Heimat", en: "homeland / home country", ex: "In meiner Heimat gibt es sehr alte Bräuche." },
+        { de: "wünschen", en: "to wish", ex: "Ich wünsche dir ein frohes neues Jahr!" },
+        { de: "der Brauch", en: "custom / tradition", ex: "Das Schmücken des Baumes ist ein bekannter Brauch." }
+      ],
+      chunks: [
+        { de: "In meiner Heimat feiert man ...", en: "In my home country we celebrate ..." },
+        { de: "Die ganze Familie kommt zusammen.", en: "The whole family comes together." },
+        { de: "Diese Tradition bedeutet mir viel.", en: "This tradition means a lot to me." }
+      ],
+      grammar: {
+        title: "Relativsätze im Nominativ und Akkusativ",
+        text: "Relativpronomen verbinden Zusatzinformationen mit einem Nomen (<em>der Mann, der ... / das Fest, das ...</em>).",
+        examples: [
+          "Das ist ein Fest, das alle zusammen bringt.",
+          "Ich kenne Verwandte, die weit entfernt wohnen."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Wir", "feiern", "jedes", "Jahr", "ein", "großes", "Familienfest."],
+          target: "Wir feiern jedes Jahr ein großes Familienfest.",
+          translation: "We celebrate a big family party every year."
+        },
+        {
+          words: ["Das", "ist", "eine", "Tradition,", "die", "mir", "sehr", "wichtig", "ist."],
+          target: "Das ist eine Tradition, die mir sehr wichtig ist.",
+          translation: "That is a tradition that is very important to me."
+        }
+      ],
+      dialogue: {
+        title: "Traditionen vergleichen",
+        lines: [
+          { speaker: "Freund", text: "Welches ist das wichtigste Fest in deinem Heimatland?" },
+          { options: [{ text: "Das Neujahrsfest! Da kommt die gesamte Familie zusammen.", next: 1 }] },
+          { speaker: "Freund", text: "Was macht ihr an diesem Tag genau?" },
+          { options: [{ text: "Wir kochen traditionelle Gerichte und schauen um Mitternacht ein Feuerwerk an.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Welches Fest feierst du in deiner Heimat am liebsten und wie wird es gefeiert?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Welches Fest magst du am liebsten?",
+          "Wer feiert mit dir?",
+          "Was isst oder macht ihr an diesem Tag?"
+        ],
+        usefulExpressions: [
+          "In meiner Heimat ...",
+          "Wir kommen zusammen, um ...",
+          "Ich mag diesen Brauch, weil ..."
+        ],
+        exampleAnswer: "In meiner Heimat feiere ich das Neujahrsfest am liebsten. Die ganze Familie kommt an diesem Tag zusammen und wir kochen gemeinsam traditionelle Gerichte. Das Essen dauert meistens mehrere Stunden, während wir uns alte Geschichten erzählen. Um Mitternacht gibt es ein großes Feuerwerk und wir wünschen uns viel Glück für das neue Jahr. Ich mag diese Tradition besonders, weil sie Verwandte zusammenbringt, die man unter dem Jahr nur selten sieht."
+      }
+    },
+
+    17: {
+      id: "termine",
+      title: "17. Termine und Pläne",
+      level: "A2+",
+      desc: "Zeitmanagement, Kalendereinträge und Terminverschiebungen.",
+      vocab: [
+        { de: "die Verabredung", en: "appointment / date", ex: "Am Freitagabend habe ich eine Verabredung." },
+        { de: "der Kalender", en: "calendar", ex: "Ich trage meine Termine in den Kalender ein." },
+        { de: "eintragen", en: "to record / enter", ex: "Bitte tragen Sie den Termin sofort ein." },
+        { de: "absagen", en: "to cancel", ex: "Leider musste ich das Meeting kurzfristig absagen." },
+        { de: "spontan", en: "spontaneous", ex: "Wir haben uns spontan auf einen Kaffee getroffen." },
+        { de: "verschieben", en: "to postpone / reschedule", ex: "Können wir den Termin auf nächsten Montag verschieben?" },
+        { de: "organisieren", en: "to organize", ex: "Ich muss meine Wochenpläne gut organisieren." },
+        { de: "die Zeitplanung", en: "scheduling / time management", ex: "Eine gute Zeitplanung spart Stress." },
+        { de: "der Termin", en: "appointment", ex: "Ich habe um 14 Uhr einen wichtigen Termin." },
+        { de: "die Enttäuschung", en: "disappointment", ex: "Die Absage war eine große Enttäuschung." }
+      ],
+      chunks: [
+        { de: "Ich trage meine Termine in den Kalender ein.", en: "I enter my appointments into the calendar." },
+        { de: "Wenn ein Termin abgesagt wird, ...", en: "When an appointment is canceled, ..." },
+        { de: "Ich muss diesen Termin verschieben.", en: "I need to reschedule this appointment." }
+      ],
+      grammar: {
+        title: "Infinitiv mit zu",
+        text: "Folgt ein Infinitiv auf bestimmte Verben oder Adjektive, steht <em>zu</em> unmittelbar vor dem Infinitiv am Satzende.",
+        examples: [
+          "Ich versuche, pünktlich zu sein.",
+          "Es ist wichtig, Termine einzuhalten."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "versuche,", "meine", "Woche", "gut", "zu", "organisieren."],
+          target: "Ich versuche, meine Woche gut zu organisieren.",
+          translation: "I try to organize my week well."
+        },
+        {
+          words: ["Wenn", "ein", "Termin", "ausfällt,", "nutze", "ich", "die", "Zeit."],
+          target: "Wenn ein Termin ausfällt, nutze ich die Zeit.",
+          translation: "When an appointment is canceled, I use the time."
+        }
+      ],
+      dialogue: {
+        title: "Termin verschieben",
+        lines: [
+          { speaker: "Arbeitskollege", text: "Können wir unsere Besprechung auf morgen verschieben?" },
+          { options: [{ text: "Ja, das passt mir sogar besser. Ich trage es in meinen Kalender ein.", next: 1 }] },
+          { speaker: "Arbeitskollege", text: "Vielen Dank für deine Flexibilität!" },
+          { options: [{ text: "Kein Problem, bis morgen dann.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Wie planst du deine Woche und was machst du, wenn ein Termin abgesagt wird?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Nutzt du Papier oder Smartphone?",
+          "Wie reagierst du auf abgesagte Termine?",
+          "Planst du auch Freizeit ein?"
+        ],
+        usefulExpressions: [
+          "Ich nutze einen digitalen Kalender, um ...",
+          "Wenn etwas ausfällt, ...",
+          "Es ist wichtig für mich, dass ..."
+        ],
+        exampleAnswer: "Ich trage alle meine beruflichen und privaten Termine in einen digitalen Kalender auf meinem Handy ein. Sonst würde ich wichtige Verabredungen schnell vergessen. Sonntags schaue ich mir immer die kommende Woche an und plane meine Aufgaben. Wenn ein Freund einen Termin kurzfristig absagt, bin ich zwar manchmal enttäuscht, aber ich nutze die gewonnene Zeit spontan für mich selbst, zum Beispiel zum Lesen oder für einen Spaziergang."
+      }
+    },
+
+    18: {
+      id: "probleme",
+      title: "18. Probleme im Alltag",
+      level: "A2+",
+      desc: "Pannen, Handwerker rufen und Beschwerden klären.",
+      vocab: [
+        { de: "defekt", en: "defective / broken", ex: "Die Spülmaschine in der Küche ist leider defekt." },
+        { de: "der Handwerker", en: "craftsman / repairman", ex: "Ich musste einen Handwerker rufen." },
+        { de: "der Vermieter", en: "landlord", ex: "Der Vermieter kümmerte sich um den Schaden." },
+        { de: "das Ersatzteil", en: "spare part", ex: "Das Ersatzteil muss erst bestellt werden." },
+        { de: "zudrehen", en: "to turn off / shut (valve)", ex: "Ich musste sofort den Wasserhahn zudrehen." },
+        { de: "die Reparatur", en: "repair", ex: "Die Reparatur dauerte zwei Stunden." },
+        { de: "die Ärgernis", en: "nuisance / annoyance", ex: "Der Ausfall der Heizung war eine große Ärgernis." },
+        { de: "der Wasserschaden", en: "water damage", ex: "Glücklicherweise gab es keinen Wasserschaden." },
+        { de: "lösen", en: "to solve", ex: "Wir konnten das Problem schnell lösen." },
+        { de: "informieren", en: "to inform", ex: "Ich habe den Hausmeister sofort informiert." }
+      ],
+      chunks: [
+        { de: "Ich hatte ein ärgerliches Problem.", en: "I had an annoying problem." },
+        { de: "Ich habe sofort den Vermieter informiert.", en: "I informed the landlord immediately." },
+        { de: "Glücklicherweise funktionierte alles wieder.", en: "Fortunately everything worked again." }
+      ],
+      grammar: {
+        title: "Plusquamperfekt und Passiv im Präteritum",
+        text: "Handlungen vor einem Vergangenheitszeitpunkt erfordern das Plusquamperfekt. Passiv im Präteritum beschreibt abgeschlossene Vorgänge (<em>wurde repariert</em>).",
+        examples: [
+          "Nachdem das Wasser ausgelaufen war, rief ich an.",
+          "Der Schaden wurde gestern behoben."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Die", "Waschmaschine", "war", "defekt,", "deshalb", "rief", "ich", "den", "Handwerker."],
+          target: "Die Waschmaschine war defekt, deshalb rief ich den Handwerker.",
+          translation: "The washing machine was broken, that's why I called the repairman."
+        },
+        {
+          words: ["Der", "Vermisster", "hat", "das", "Problem", "schnell", "gelöst."],
+          target: "Der Vermieter hat das Problem schnell gelöst.",
+          translation: "The landlord solved the problem quickly."
+        }
+      ],
+      dialogue: {
+        title: "Schaden melden",
+        lines: [
+          { speaker: "Vermieter", text: "Guten Tag, Sie haben einen Schaden gemeldet?" },
+          { options: [{ text: "Ja, in der Küche läuft Wasser aus der Waschmaschine!", next: 1 }] },
+          { speaker: "Vermieter", text: "Ich schicke sofort einen Handwerker vorbei." },
+          { options: [{ text: "Vielen Dank für die schnelle Hilfe!", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Erzähle von einem Alltagsproblem, das du vor Kurzem hattest. Wie hast du es gelöst?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Was für ein Problem gab es?",
+          "Wen hast du um Hilfe gebeten?",
+          "Wie lange hat die Lösung gedauert?"
+        ],
+        usefulExpressions: [
+          "Vor Kurzem hatte ich das Problem, dass ...",
+          "Ich habe zuerst ... gemacht",
+          "Glücklicherweise ..."
+        ],
+        exampleAnswer: "Letzte Woche hatte ich ein ärgerliches Problem: Die Waschmaschine in meiner Wohnung war plötzlich defekt und Wasser lief auf den Boden. Ich habe zuerst den Hauptwasserhahn zugedreht und den Vermieter informiert. Glücklicherweise hat er am selben Tag einen Handwerker geschickt. Der Handwerker hat ein Ersatzteil eingebaut und nach zwei Stunden funktionierte alles wieder. Es war zwar stressig, aber ich war froh, dass das Problem so schnell gelöst werden konnte."
+      }
+    },
+
+    19: {
+      id: "behoerden",
+      title: "19. Dienstleistungen und Behörden",
+      level: "A2+",
+      desc: "Bürgeramt, Dokumente, Formulare und Anträge.",
+      vocab: [
+        { de: "das Bürgeramt", en: "local administrative office", ex: "Für den Ausweis muss ich zum Bürgeramt." },
+        { de: "der Sachbearbeiter", en: "clerk / case worker", ex: "Der Sachbearbeiter prüfte meine Unterlagen." },
+        { de: "das Formular", en: "form", ex: "Bitte füllen Sie dieses Formular aus." },
+        { de: "der Wohnsitz", en: "residence / domicile", ex: "Ich muss meinen neuen Wohnsitz anmelden." },
+        { de: "ausfüllen", en: "to fill out / complete", ex: "Vergessen Sie nicht, den Antrag auszufüllen." },
+        { de: "die Wartezeit", en: "waiting time", ex: "Im Amt gab es eine lange Wartezeit." },
+        { de: "das Dokument", en: "document", ex: "Bringen Sie alle erforderlichen Dokumente mit." },
+        { de: "beantragen", en: "to apply for", ex: "Ich möchte einen neuen Pass beantragen." },
+        { de: "die Behörde", en: "authority / government agency", ex: "Der Besuch bei der Behörde verlief reibungslos." },
+        { de: "der Schalter", en: "counter / desk", ex: "Gehen Sie bitte zu Schalter 4." }
+      ],
+      chunks: [
+        { de: "Ich musste zum Bürgeramt gehen, um ...", en: "I had to go to the citizens' office to ..." },
+        { de: "Ich empfehle, alle Formulare vorher auszufüllen.", en: "I recommend completing all forms in advance." },
+        { de: "Die Wartezeit war lang.", en: "The waiting time was long." }
+      ],
+      grammar: {
+        title: "Finalsätze mit um ... zu vs. damit",
+        text: "Subjekte identisch $\rightarrow$ <em>um ... zu</em> + Infinitiv. Subjekte verschieden $\rightarrow$ <em>damit</em> + Nebensatz.",
+        examples: [
+          "Ich gehe zum Amt, um den Pass abzuholen.",
+          "Ich gebe ihm die Unterlagen, damit er sie prüft."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Ich", "gehe", "zum", "Amt,", "um", "meinen", "Pass", "zu", "verlängern."],
+          target: "Ich gehe zum Amt, um meinen Pass zu verlängern.",
+          translation: "I am going to the office to renew my passport."
+        },
+        {
+          words: ["Füllen", "Sie", "das", "Formular", "aus,", "damit", "alles", "schneller", "geht."],
+          target: "Füllen Sie das Formular aus, damit alles schneller geht.",
+          translation: "Fill out the form so that everything goes faster."
+        }
+      ],
+      dialogue: {
+        title: "Beim Bürgeramt",
+        lines: [
+          { speaker: "Sachbearbeiter", text: "Guten Tag, haben Sie alle Dokumente dabei?" },
+          { options: [{ text: "Guten Tag. Ja, hier sind mein Ausweis und das ausgefüllte Formular.", next: 1 }] },
+          { speaker: "Sachbearbeiter", text: "Sehr gut. Die Bearbeitung dauert etwa zwei Wochen." },
+          { options: [{ text: "Perfekt, vielen Dank!", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Welche Erfahrungen hast du mit Behörden oder Dienstleistungen gemacht?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Warum musstest du zum Amt?",
+          "Wie lange musstest du warten?",
+          "Waren die Mitarbeiter hilfreich?"
+        ],
+        usefulExpressions: [
+          "Ich musste neulich zu ...",
+          "Es war gar nicht so leicht, ...",
+          "Mein Tipp für Behördengänge ist ..."
+        ],
+        exampleAnswer: "Vor zwei Monaten musste ich zum Bürgeramt gehen, um meinen neuen Wohnsitz anzumelden. Es war gar nicht so einfach, online einen freien Termin zu bekommen. Als ich dort war, musste ich trotzdem noch 20 Minuten im Warteraum warten. Der Sachbearbeiter war jedoch sehr freundlich und hat alle Dokumente schnell bearbeitet. Mein Tipp für Behördengänge ist, immer alle Formulare vorher komplett auszufüllen und pünktlich zu erscheinen, um Wartezeiten zu vermeiden."
+      }
+    },
+
+    20: {
+      id: "nachbarschaft",
+      title: "20. Nachbarschaft und Zusammenleben",
+      level: "A2+",
+      desc: "Treppenhaus, Pakete annehmen, Hausordnung und Lärm.",
+      vocab: [
+        { de: "das Verhältnis", en: "relationship / rapport", ex: "Wir haben ein freundliches Verhältnis zu den Nachbarn." },
+        { de: "die Ruhezeit", en: "quiet hours", ex: "Ab 22 Uhr beginnt die nächtliche Ruhezeit." },
+        { de: "der Plausch", en: "chat / gossip", ex: "Im Flur halten wir gerne einen kurzen Plausch." },
+        { de: "die Hilfsbereitschaft", en: "helpfulness", ex: "Ich schätze die Hilfsbereitschaft in unserem Haus." },
+        { de: "der Gegenseitige Respekt", en: "mutual respect", ex: "Gegenseitiger Respekt verhindert viele Konflikte." },
+        { de: "das Treppenhaus", en: "stairwell", ex: "Im Treppenhaus stehen keine Fahrräder." },
+        { de: "einhalten", en: "to adhere to / keep", ex: "Man muss die Regeln der Hausordnung einhalten." },
+        { de: "das Paket", en: "package / parcel", ex: "Könnten Sie mein Paket entgegennehmen?" },
+        { de: "der Krach", en: "noise / racket", ex: "Gestern gab es späten Krach im Nebenhaus." },
+        { de: "die Hausordnung", en: "house rules", ex: "Die Hausordnung hängt im Eingangsbereich." }
+      ],
+      chunks: [
+        { de: "Wir grüßen uns immer im Treppenhaus.", en: "We always greet each other in the stairwell." },
+        { de: "Eine gute Nachbarschaft zeichnet sich durch ... aus.", en: "A good neighborhood is characterized by ..." },
+        { de: "Wir nehmen Pakete an.", en: "We accept packages for each other." }
+      ],
+      grammar: {
+        title: "Indirekte Fragesätze mit ob und W-Fragen",
+        text: "Indirekte Fragen verschieben das Verb ans Satzende. Ja/Nein-Fragen nutzen <em>ob</em>, W-Fragen das Fragewort.",
+        examples: [
+          "Ich frage, ob er mein Paket hat.",
+          "Ich möchte wissen, wann die Ruhezeit beginnt."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Wir", "fragen", "die", "Nachbarn,", "ob", "sie", "Hilfe", "brauchen."],
+          target: "Wir fragen die Nachbarn, ob sie Hilfe brauchen.",
+          translation: "We ask the neighbors if they need help."
+        },
+        {
+          words: ["Es", "ist", "wichtig,", "dass", "man", "die", "Ruhezeiten", "immer", "einhält."],
+          target: "Es ist wichtig, dass man die Ruhezeiten immer einhält.",
+          translation: "It is important to always observe quiet hours."
+        }
+      ],
+      dialogue: {
+        title: "Paket annehmen",
+        lines: [
+          { speaker: "Nachbar", text: "Hallo! Könnten Sie vielleicht dieses Paket für mich annehmen?" },
+          { options: [{ text: "Ja, sehr gerne! Ich bin den ganzen Nachmittag zu Hause.", next: 1 }] },
+          { speaker: "Nachbar", text: "Das ist wirklich nett von Ihnen, vielen Dank!" },
+          { options: [{ text: "Kein Problem, unter Nachbarn hilft man sich doch.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Wie ist das Verhältnis zu deinen Nachbarn und was macht eine gute Nachbarschaft aus?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Kennst du deine Nachbarn gut?",
+          "Helft ihr euch gegenseitig?",
+          "Wie geht ihr mit Lärm um?"
+        ],
+        usefulExpressions: [
+          "Ich habe ein gutes Verhältnis zu ...",
+          "Wir nehmen gegenseitig ... an",
+          "Wichtig ist vor allem ..."
+        ],
+        exampleAnswer: "Ich habe ein sehr gutes Verhältnis zu meinen Nachbarn. Wir grüßen uns immer im Treppenhaus und halten manchmal einen kurzen Plausch. Wenn jemand im Urlaub ist, gießen wir gegenseitig die Pflanzen oder nehmen Pakete an. Eine gute Nachbarschaft zeichnet sich meiner Meinung nach durch gegenseitigen Respekt aus. Das bedeutet auch, dass man abends die Ruhezeiten einhält und Bescheid gibt, wenn man einmal eine größere Party feiert."
+      }
+    },
+
+    // ----------------------------------------------------
+    // LEVEL B1: OPINIONS, EXPERIENCES, AND REASONS
+    // ----------------------------------------------------
+    21: {
+      id: "karriere",
+      title: "21. Arbeit und Karriere",
+      level: "B1",
+      desc: "Work-Life-Balance, Aufstiegschancen und Weiterbildung.",
+      vocab: [
+        { de: "die Entwicklungsmöglichkeit", en: "development opportunity", ex: "Gute Entwicklungsmöglichkeiten steigern die Motivation." },
+        { de: "die Work-Life-Balance", en: "work-life balance", ex: "Eine ausgewogene Work-Life-Balance ist gesund." },
+        { de: "die Weiterbildung", en: "further education / training", ex: "Die Firma bietet regelmäßige Weiterbildung an." },
+        { de: "die Überstunden", en: "overtime", ex: "Möchtest du bezahlte Überstunden machen?" },
+        { de: "die Motivation", en: "motivation", ex: "Ohne Lob sinkt die Motivation im Team." },
+        { de: "das Arbeitsklima", en: "working atmosphere", ex: "Ein gutes Arbeitsklima erleichtert den Tag." },
+        { de: "vereinbaren", en: "to balance / reconcile", ex: "Ich kann Beruf und Familie gut vereinbaren." },
+        { de: "das Homeoffice", en: "home office / remote work", ex: "Zweimal die Woche arbeite ich im Homeoffice." },
+        { de: "der Karriereschritt", en: "career step / move", ex: "Das Projekt war ein wichtiger Karriereschritt." },
+        { de: "das Gehalt", en: "salary / pay", ex: "Ende des Monats wird das Gehalt überwiesen." }
+      ],
+      chunks: [
+        { de: "Mir sind Entwicklungsmöglichkeiten wichtiger als ...", en: "Opportunities for advancement are more important to me than ..." },
+        { de: "Ich lege großen Wert auf ...", en: "I attach great importance to ..." },
+        { de: "Man verliert die Motivation, wenn ...", en: "One loses motivation when ..." }
+      ],
+      grammar: {
+        title: "Konjunktiv II der Modalverben für Wünsche und Empfehlungen",
+        text: "Formen wie <em>müsste, sollte, könnte</em> drücken Ratschläge, Empfehlungen oder hypothetische Wünsche höflich aus.",
+        examples: [
+          "Man sollte mehr auf Erholung achten.",
+          "Ich müsste meine Arbeitszeit reduzieren."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Man", "sollte", "auf", "eine", "gute", "Work-Life-Balance", "achten."],
+          target: "Man sollte auf eine gute Work-Life-Balance achten.",
+          translation: "One should pay attention to a good work-life balance."
+        },
+        {
+          words: ["Wenn", "man", "zu", "viel", "arbeitet,", "muss", "man", "mehr", "Pause", "machen."],
+          target: "Wenn man zu viel arbeitet, muss man mehr Pause machen.",
+          translation: "If you work too much, you must take more breaks."
+        }
+      ],
+      dialogue: {
+        title: "Mitarbeitergespräch",
+        lines: [
+          { speaker: "Chef", text: "Wie sehen Ihre beruflichen Ziele für die nächsten drei Jahre aus?" },
+          { options: [{ text: "Ich möchte mich gerne im Bereich Projektleitung weiterbilden und mehr Verantwortung übernehmen.", next: 1 }] },
+          { speaker: "Chef", text: "Wir unterstützen Weiterbildungen gerne. Wie klappt die Arbeit im Homeoffice?" },
+          { options: [{ text: "Das hilft mir sehr dabei, Familie und Beruf flexibler zu vereinbaren.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Was ist dir bei deiner Karriere wichtig und wie denkst du über die Work-Life-Balance?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Ist dir Gehalt oder Arbeitsklima wichtiger?",
+          "Wie stehst du zu Überstunden?",
+          "Welche Vorteile bietet Homeoffice?"
+        ],
+        usefulExpressions: [
+          "Für meine berufliche Zukunft ist mir wichtig, dass ...",
+          "Ich bin der Meinung, dass ...",
+          "Ein ausgewogenes Verhältnis zwischen ..."
+        ],
+        exampleAnswer: "Für meine berufliche Zukunft sind mir gute Entwicklungsmöglichkeiten und ein angenehmes Arbeitsklima wichtiger als ein extrem hohes Gehalt. Ich möchte mich kontinuierlich weiterbilden und interessante Aufgaben übernehmen. Gleichzeitig lege ich großen Wert auf eine ausgewogene Work-Life-Balance. Wenn man ständig Überstunden macht, leidet die Gesundheit darunter und man verliert die Motivation. Ich glaube, dass flexible Arbeitszeiten und die Möglichkeit zum Homeoffice dazu beitragen, Berufs- und Privatleben besser miteinander zu vereinbaren."
+      }
+    },
+
+    22: {
+      id: "umwelt",
+      title: "22. Umwelt und Klimaschutz",
+      level: "B1",
+      desc: "Nachhaltigkeit, Plastikmüll und Eigenverantwortung.",
+      vocab: [
+        { de: "die Verantwortung", en: "responsibility", ex: "Wir alle tragen Verantwortung für die Natur." },
+        { de: "die Gewohnheit", en: "habit", ex: "Man muss alte Gewohnheiten im Konsum ablegen." },
+        { de: "der Plastikmüll", en: "plastic waste", ex: "Ozeane sind voller Plastikmüll." },
+        { de: "die Herausforderung", en: "challenge", ex: "Der Klimawandel ist eine enorme Herausforderung." },
+        { de: "die Wirkung", en: "effect / impact", ex: "Kleine Maßnahmen zeigen große Wirkung." },
+        { de: "beitragen", en: "to contribute", ex: "Jeder kann zum Umweltschutz beitragen." },
+        { de: "der Stoffbeutel", en: "cloth bag", ex: "Zum Einkaufen nutze ich nur Stoffbeutel." },
+        { de: "reduzieren", en: "to reduce", ex: "Wir müssen den Energieverbrauch reduzieren." },
+        { de: "der Klimawandel", en: "climate change", ex: "Der Klimawandel betrifft alle Länder." },
+        { de: "der CO2-Ausstoß", en: "CO2 emissions", ex: "Der CO2-Ausstoß muss drastisch sinken." }
+      ],
+      chunks: [
+        { de: "Meiner Meinung nach trägt jeder Einzelne ...", en: "In my opinion, every individual carries ..." },
+        { de: "Das größte Problem sehe ich darin, dass ...", en: "I see the biggest problem in the fact that ..." },
+        { de: "Kleine Schritte können ...", en: "Small steps can ..." }
+      ],
+      grammar: {
+        title: "Vorgangspassiv mit Modalverben",
+        text: "Passiv mit Modalverb: <em>Modalverb + Partizip II + werden</em> am Satzende.",
+        examples: [
+          "Plastikmüll muss vermieden werden.",
+          "Der CO2-Ausstoß soll gesenkt werden."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Plastikmüll", "muss", "im", "Alltag", "deutlich", "reduziert", "werden."],
+          target: "Plastikmüll muss im Alltag deutlich reduziert werden.",
+          translation: "Plastic waste must be significantly reduced in everyday life."
+        },
+        {
+          words: ["Jeder", "Einzelne", "kann", "einen", "Beitrag", "zum", "Umweltschutz", "leisten."],
+          target: "Jeder Einzelne kann einen Beitrag zum Umweltschutz leisten.",
+          translation: "Every single person can make a contribution to environmental protection."
+        }
+      ],
+      dialogue: {
+        title: "Umweltschutz im Alltag",
+        lines: [
+          { speaker: "Reporter", text: "Was tun Sie in Ihrem Alltag aktiv für den Umweltschutz?" },
+          { options: [{ text: "Ich nutze Stoffbeutel beim Einkaufen und fahre fast immer mit der Bahn.", next: 1 }] },
+          { speaker: "Reporter", text: "Glauben Sie, dass das reicht?" },
+          { options: [{ text: "Es ist ein Anfang, aber die Industrie muss natürlich auch mehr tun.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Was tust du persönlich für den Umweltschutz und wo siehst du die größten Herausforderungen?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Wie vermeidest du Müll im Alltag?",
+          "Verzichtest du auf Flüge?",
+          "Warum ändern viele Menschen ihre Gewohnheiten nicht?"
+        ],
+        usefulExpressions: [
+          "Meiner Meinung nach sollte man ...",
+          "Eine große Herausforderung ist ...",
+          "Ich versuche persönlich ..."
+        ],
+        exampleAnswer: "Meiner Meinung nach trägt jeder Einzelne eine Verantwortung für den Klimaschutz. Im Alltag versuche ich Plastikmüll zu reduzieren, indem ich Stoffbeutel zum Einkaufen mitnehme. Ich fahre meistens mit dem Fahrrad oder der Bahn und fliege nur sehr selten in den Urlaub. Das größte Problem sehe ich darin, dass viele Menschen ihre Gewohnheiten nicht ändern wollen, weil es bequem ist. Dennoch bin ich überzeugt, dass kleine Schritte von vielen Menschen zusammen eine große Wirkung auf unsere Umwelt haben können."
+      }
+    },
+
+    23: {
+      id: "technologie",
+      title: "23. Technologie und Digitalisierung",
+      level: "B1",
+      desc: "Künstliche Intelligenz, Automatisierung und Datenschutz.",
+      vocab: [
+        { de: "der Fortschritt", en: "progress / advancement", ex: "Der technologische Fortschritt beschleunigt die Welt." },
+        { de: "die Künstliche Intelligenz", en: "artificial intelligence", ex: "Künstliche Intelligenz verändert viele Berufe." },
+        { de: "die Routineaufgabe", en: "routine task", ex: "Software erledigt einfache Routineaufgaben." },
+        { de: "die Automatisierung", en: "automation", ex: "Die Automatisierung spart viel Produktionszeit." },
+        { de: "das Risiko", en: "risk", ex: "Jede neue Technologie birgt ein gewisses Risiko." },
+        { de: "der Datenschutz", en: "data privacy", ex: "Der Datenschutz muss im Netz streng eingehalten werden." },
+        { de: "die Voraussetzung", en: "prerequisite / condition", ex: "Schnelles Internet ist eine Voraussetzung für Homeoffice." },
+        { de: "präzise", en: "precise / accurate", ex: "KI-Systeme arbeiten oft sehr präzise." },
+        { de: "verändern", en: "to change / alter", ex: "Digitale Tools verändern unsere Arbeitsweise." },
+        { de: "die Medizin", en: "medicine / medical field", ex: "Moderne Systeme helfen der Medizin bei Diagnosen." }
+      ],
+      chunks: [
+        { de: "Technologischer Fortschritt verändert unsere Arbeitswelt.", en: "Technological progress changes our working world." },
+        { de: "Ein klarer Vorteil ist, dass ...", en: "A clear advantage is that ..." },
+        { de: "Es kommt darauf an, dass ...", en: "It is essential that ..." }
+      ],
+      grammar: {
+        title: "Proportionale Komparative mit je ..., desto ...",
+        text: "Zwei Entwicklungen vergleichen: Nebensatz mit <em>je</em> + Verb am Ende $\rightarrow$ Hauptsatz mit <em>desto/umso</em> + Komparativ.",
+        examples: [
+          "Je mehr wir automatisieren, desto schneller arbeiten wir.",
+          "Je neuer das System ist, desto sicherer ist es."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Je", "mehr", "Prozesse", "automatisiert", "werden,", "desto", "schneller", "arbeiten", "wir."],
+          target: "Je mehr Prozesse automatisiert werden, desto schneller arbeiten wir.",
+          translation: "The more processes are automated, the faster we work."
+        },
+        {
+          words: ["Künstliche", "Intelligenz", "bringt", "Chancen", "und", "Risiken", "mit", "sich."],
+          target: "Künstliche Intelligenz bringt Chancen und Risiken mit sich.",
+          translation: "Artificial intelligence brings opportunities and risks with it."
+        }
+      ],
+      dialogue: {
+        title: "Einsatz von KI",
+        lines: [
+          { speaker: "Techniker", text: "Nutzen Sie schon KI-Systeme bei Ihrer täglichen Arbeit?" },
+          { options: [{ text: "Ja, für Routineaufgaben und Textkorrekturen sind sie sehr nützlich.", next: 1 }] },
+          { speaker: "Techniker", text: "Haben Sie keine Angst wegen des Datenschutzes?" },
+          { options: [{ text: "Doch, deshalb braucht es strenge gesetzliche Regeln.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Welche Vor- und Nachteile bringt künstliche Intelligenz und neue Technologie in unserer Gesellschaft?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Welche Aufgaben übernimmt KI schon heute?",
+          "Gibt es Gefahren für Arbeitsplätze?",
+          "Wie kann Politik das regeln?"
+        ],
+        usefulExpressions: [
+          "Eine wichtige Technologie ist ...",
+          "Ein Vorteil besteht darin, dass ...",
+          "Auf der anderen Seite gibt es Risiken wie ..."
+        ],
+        exampleAnswer: "Technologischer Fortschritt und künstliche Intelligenz verändern unsere Arbeitswelt rasant. Ein klarer Vorteil ist, dass Routineaufgaben automatisiert werden, wodurch wir mehr Zeit für kreative Arbeit gewinnen. Medizinische Diagnosen werden durch moderne Systeme ebenfalls präziser. Auf der anderen Seite gibt es auch Risiken, wie den Verlust von Arbeitsplätzen oder Datenschutzprobleme. Es kommt darauf an, dass die Politik klare Regeln für den Einsatz von Technologien schafft, damit die Gesellschaft als Ganzes davon profitiert."
+      }
+    },
+
+    24: {
+      id: "socialmedia",
+      title: "24. Social Media und Kommunikation",
+      level: "B1",
+      desc: "Soziale Netzwerke, beschleunigte Kommunikation und Vergleiche.",
+      vocab: [
+        { de: "die Kommunikation", en: "communication", ex: "Social Media verändert die persönliche Kommunikation." },
+        { de: "die Beschleunigung", en: "acceleration", ex: "Das Internet führt zur Beschleunigung von Nachrichten." },
+        { de: "das Netz", en: "the web / network", ex: "Über das Netz bleiben wir weltweilt in Kontakt." },
+        { de: "das Missverständnis", en: "misunderstanding", ex: "In Textnachrichten entstehen oft Missverständnisse." },
+        { de: "das Selbstbild", en: "self-image", ex: "Soziale Netzwerke können das Selbstbild beeinflussen." },
+        { de: "essenziell", en: "essential", ex: "Ein kritischer Umgang mit Medien ist essenziell." },
+        { de: "der Umgang", en: "handling / dealing with", ex: "Der richtige Umgang mit Daten muss gelernt werden." },
+        { de: "teilen", en: "to share", ex: "Viele Nutzer teilen täglich Urlaubsfotos." },
+        { de: "ersetzen", en: "to replace", ex: "Chatten kann keine echten Gespräche ersetzen." },
+        { de: "vernetzen", en: "to network / connect", ex: "Menschliche Wesen vernetzen sich weltweit online." }
+      ],
+      chunks: [
+        { de: "Soziale Medien haben die Kommunikation beschleunigt.", en: "Social media has accelerated communication." },
+        { de: "Viele Gespräche werden ersetzt durch ...", en: "Many conversations are replaced by ..." },
+        { de: "Ein bewusster Umgang ist essenziell.", en: "Conscious usage is essential." }
+      ],
+      grammar: {
+        title: "Kausal- und Konzessivpräpositionen mit Genitiv",
+        text: "Präpositionen wie <em>aufgrund, trotz, während</em> verlangen im gehobenen B1-Deutsch den Genitiv.",
+        examples: [
+          "Trotz der Vorteile bleibt Social Media gefährlich.",
+          "Aufgrund harter Worte gab es Streit."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Trotz", "der", "Vorteile", "kann", "Social", "Media", "einsam", "machen."],
+          target: "Trotz der Vorteile kann Social Media einsam machen.",
+          translation: "Despite the benefits, social media can make you lonely."
+        },
+        {
+          words: ["Aufgrund", "kurzer", "Textnachrichten", "entstehen", "oft", "Missverständnisse."],
+          target: "Aufgrund kurzer Textnachrichten entstehen oft Missverständnisse.",
+          translation: "Due to short text messages, misunderstandings often arise."
+        }
+      ],
+      dialogue: {
+        title: "Social Media Konsum",
+        lines: [
+          { speaker: "Freund", text: "Bist du in vielen sozialen Netzwerken aktiv?" },
+          { options: [{ text: "Ja, aber ich merke oft, wie viel Zeit ich dort verschwende.", next: 1 }] },
+          { speaker: "Freund", text: "Fehlt dir nicht die echte Kommunikation von Angesicht zu Angesicht?" },
+          { options: [{ text: "Absolut, persönliche Treffen kann keine App ersetzen.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Wie hat Social Media die Art und Weise verändert, wie wir miteinander kommunizieren?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Bleibst du online mit Freunden in Kontakt?",
+          "Welche negativen Effekte siehst du?",
+          "Wie schützt du deine Privatsphäre?"
+        ],
+        usefulExpressions: [
+          "Social Media hat bewirkt, dass ...",
+          "Viele neigen dazu, ...",
+          "Ich denke, man sollte Grenzen setzen, weil ..."
+        ],
+        exampleAnswer: "Soziale Medien haben unsere Kommunikation stark vereinfacht und beschleunigt. Man kann heute problemlos mit Freunden auf der ganzen Welt im Kontakt bleiben und Erlebnisse teilen. Allerdings sehe ich die Entwicklung auch kritisch. Viele persönliche Gespräche werden durch kurze Nachrichten ersetzt, was oft zu Missverständnissen führt. Zudem verbringen viele Menschen zu viel Zeit online und vergleichen ihr Leben mit perfekten Bildern im Netz. Ein bewusster und kontrollierter Umgang mit Social Media ist daher essenziell."
+      }
+    },
+
+    25: {
+      id: "kulturunterschiede",
+      title: "25. Reisen und kulturelle Unterschiede",
+      level: "B1",
+      desc: "Interkulturelle Erfahrungen, Höflichkeit und Perspektiven.",
+      vocab: [
+        { de: "die Höflichkeitsregel", en: "rule of politeness", ex: "Jedes Land hat eigene Höflichkeitsregeln." },
+        { de: "die Esskultur", en: "food culture", ex: "Die Esskultur in Italien fasziniert mich." },
+        { de: "hinterfragen", en: "to question / challenge", ex: "Man sollte eigene Vorurteile hinterfragen." },
+        { de: "die Perspektive", en: "perspective", ex: "Auslandsreisen erweitern die eigene Perspektive." },
+        { de: "die Bereicherung", en: "enrichment", ex: "Andere Kulturen sind eine Bereicherung." },
+        { de: "die Hürde", en: "hurdle / barrier", ex: "Sprachbarrieren sind keine unüberwindbare Hürde." },
+        { de: "indirekt", en: "indirect", ex: "In manchen Ländern kommuniziert man sehr indirekt." },
+        { de: "die Intention", en: "intention", ex: "Man muss die Intention hinter den Gesten verstehen." },
+        { de: "schätzen", en: "to appreciate / value", ex: "Ich schätze die Gastfreundschaft im Ausland." },
+        { de: "aufgeschlossen", en: "open-minded", ex: "Reisende sollten aufgeschlossen bleiben." }
+      ],
+      chunks: [
+        { de: "Als ich unterwegs war, habe ich bemerkt ...", en: "When I was traveling, I noticed ..." },
+        { de: "Solche Erfahrungen zeigen mir ...", en: "Such experiences show me ..." },
+        { de: "Kulturunterschiede sind eine Bereicherung.", en: "Cultural differences are an enrichment." }
+      ],
+      grammar: {
+        title: "Infinitivgruppen mit statt zu / ohne zu",
+        text: "Nebensätze ohne eigenes Subjekt drücken Alternativen (<em>statt ... zu</em>) oder fehlende Begleitumstände (<em>ohne ... zu</em>) aus.",
+        examples: [
+          "Er reist, ohne Vorurteile im Kopf zu haben.",
+          "Statt im Hotel zu bleiben, erkundete sie die Stadt."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Man", "sollte", "reisen,", "ohne", "Vorurteile", "im", "Kopf", "zu", "haben."],
+          target: "Man sollte reisen, ohne Vorurteile im Kopf zu haben.",
+          translation: "One should travel without having prejudices in mind."
+        },
+        {
+          words: ["Statt", "nur", "im", "Hotel", "zu", "bleiben,", "entdecke", "ich", "die", "Kultur."],
+          target: "Statt nur im Hotel zu bleiben, entdecke ich die Kultur.",
+          translation: "Instead of just staying in the hotel, I discover the culture."
+        }
+      ],
+      dialogue: {
+        title: "Verhaltensregeln im Ausland",
+        lines: [
+          { speaker: "Reisebegleiter", text: "Ist dir in diesem Land eine besondere Verhaltensregel aufgefallen?" },
+          { options: [{ text: "Ja, die Menschen kommunizieren viel indirekter als bei uns zu Hause.", next: 1 }] },
+          { speaker: "Reisebegleiter", text: "Fandest du das schwierig zu verstehen?" },
+          { options: [{ text: "Anfangs schon, aber man lernt schnell, es als Bereicherung zu sehen.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Welche kulturellen Unterschiede hast du beim Reisen erlebt und was kann man daraus lernen?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Welche Länder hast du besucht?",
+          "Wie reagieren Einheimische auf Höflichkeit?",
+          "Warum verändert Reisen die Denkweise?"
+        ],
+        usefulExpressions: [
+          "Als ich in ... war, fiel mir auf, dass ...",
+          "Im Vergleich zu meiner Heimat ...",
+          "Das hat mir geholfen, ..."
+        ],
+        exampleAnswer: "Als ich in Asien unterwegs war, habe ich bemerkt, wie unterschiedlich die Höflichkeitsregeln und die Esskultur im Vergleich zu Europa sind. Während man in Deutschland sehr direkt kommuniziert, ist die Kommunikation dort viel indirekter, um niemanden zu verletzen. Solche Erfahrungen zeigen mir, wie wertvoll das Reisen ist. Man lernt, die eigene Perspektive zu hinterfragen, toleranter zu werden und offen auf fremde Traditionen zuzugehen. Kulturunterschiede sind keine Hürde, sondern eine Bereicherung."
+      }
+    },
+
+    26: {
+      id: "lebensstil",
+      title: "26. Gesundheit und Lebensstil",
+      level: "B1",
+      desc: "Körperliches und mentales Wohlbefinden, Diäten und Hektik.",
+      vocab: [
+        { de: "das Zusammenspiel", en: "interplay / interaction", ex: "Ein gutes Zusammenspiel von Geist und Körper ist wichtig." },
+        { de: "das Wohlbefinden", en: "well-being", ex: "Schlaf fördert das mentale Wohlbefinden." },
+        { de: "die Auszeit", en: "break / time-out", ex: "Ich brauche am Wochenende eine kurze Auszeit." },
+        { de: "nachhaltig", en: "sustainable / lasting", ex: "Gesunde Gewohnheiten wirken nachhaltig." },
+        { de: "die Gewohnheit", en: "habit", ex: "Es braucht Wochen, eine neue Gewohnheit zu formen." },
+        { de: "die Diät", en: "diet", ex: "Strikte Diäten bringen meistens keinen Erfolg." },
+        { de: "die Ausgewogenheit", en: "balance", ex: "Ausgewogenheit in allen Lebensbereichen ist ideal." },
+        { de: "die Erholung", en: "recovery / rest", ex: "Nach dem Training braucht der Körper Erholung." },
+        { de: "die Hektik", en: "rush / hustle", ex: "Die Hektik des Alltags erzeugt oft Stress." },
+        { de: "der Lebensstil", en: "lifestyle", ex: "Ein aktiver Lebensstil schützt vor Krankheiten." }
+      ],
+      chunks: [
+        { de: "Ein gesunder Lebensstil bedeutet für mich weit mehr als ...", en: "A healthy lifestyle means far more to me than ..." },
+        { de: "Ich habe die Erfahrung gemacht, dass ...", en: "I have found from experience that ..." },
+        { de: "Viel nachhaltiger ist es, ...", en: "It is much more sustainable to ..." }
+      ],
+      grammar: {
+        title: "Modalsätze mit indem",
+        text: "Nebensätze mit <em>indem</em> beschreiben das Mittel oder die Methode, mit der ein Ziel erreicht wird.",
+        examples: [
+          "Man bleibt fit, indem man täglich spazieren geht.",
+          "Ich baue Stress ab, indem ich Meditationsübungen mache."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Man", "verbessert", "seine", "Gesundheit,", "indem", "man", "viel", "Schlaf", "bekommt."],
+          target: "Man verbessert seine Gesundheit, indem man viel Schlaf bekommt.",
+          translation: "One improves one's health by getting a lot of sleep."
+        },
+        {
+          words: ["Strikte", "Diäten", "sind", "selten", "von", "dauerhaftem", "Erfolg."],
+          target: "Strikte Diäten sind selten von dauerhaftem Erfolg.",
+          translation: "Strict diets are rarely of lasting success."
+        }
+      ],
+      dialogue: {
+        title: "Gesunde Lebensweise",
+        lines: [
+          { speaker: "Fitnesstrainer", text: "Was gehört für Sie persönlich zu einem gesunden Lebensstil?" },
+          { options: [{ text: "Ausgewogene Ernährung, regelmäßiger Sport und vor allem genug Erholung.", next: 1 }] },
+          { speaker: "Fitnesstrainer", text: "Halten Sie viel von Diäten?" },
+          { options: [{ text: "Nein, langfristige Gewohnheiten funktionieren meiner Meinung nach viel besser.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Was bedeutet ein 'gesunder Lebensstil' für dich im modernen Alltag?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Ist es nur Sport oder auch mentale Gesundheit?",
+          "Wie vermeidest du Stress?",
+          "Was hältst du von Diäten?"
+        ],
+        usefulExpressions: [
+          "Für mich umfasst Gesundheit sowohl ...",
+          "Im stressigen Alltag versuche ich ...",
+          "Nachhaltig ist vor allem ..."
+        ],
+        exampleAnswer: "Ein gesunder Lebensstil bedeutet für mich weit mehr als nur Sport und eine gute Ernährung. Es geht um das Zusammenspiel von körperlichem und mentalem Wohlbefinden. Im oft stressigen Berufsalltag ist es wichtig, bewusst Auszeiten einzuplanen, ausreichend zu schlafen und frische Nahrungsmittel zuzubereiten. Ich habe die Erfahrung gemacht, dass strikte Diäten selten funktionieren. Viel nachhaltiger ist es, ausgewogene Gewohnheiten zu entwickeln, die langfristig Freude machen und Energie für den Tag liefern."
+      }
+    },
+
+    27: {
+      id: "bildung",
+      title: "27. Bildung und Zukunft",
+      level: "B1",
+      desc: "Lebenslanges Lernen, Schulsystem und Jobqualifikation.",
+      vocab: [
+        { de: "das Lebenslange Lernen", en: "lifelong learning", ex: "Lebenslanges Lernen sichert beruflichen Erfolg." },
+        { de: "die Notwendigkeit", en: "necessity / need", ex: "Weiterbildung ist zur Notwendigkeit geworden." },
+        { de: "die Kompetenz", en: "competence / skill", ex: "Digitale Kompetenzen werden immer wichtiger." },
+        { de: "die Flexibilität", en: "flexibility", ex: "Der moderne Arbeitsmarkt verlangt Hohe Flexibilität." },
+        { de: "der Arbeitsmarkt", en: "job market / labor market", ex: "Der Arbeitsmarkt entwickelt sich rasch weiter." },
+        { de: "die Veränderung", en: "change / transformation", ex: "Wir müssen uns an Veränderungen anpassen." },
+        { de: "die Qualifikation", en: "qualification", ex: "Zusätzliche Qualifikationen erhöhen die Chancen." },
+        { de: "das Schulsystem", en: "school system", ex: "Das Schulsystem sollte mehr Praxisbezug haben." },
+        { de: "investieren", en: "to invest", ex: "Man sollte Zeit in die eigene Bildung investieren." },
+        { de: "erwerben", en: "to acquire / gain", ex: "Im Sprachkurs kann man neue Fähigkeiten erwerben." }
+      ],
+      chunks: [
+        { de: "Lebenslanges Lernen ist zu einer Notwendigkeit geworden.", en: "Lifelong learning has become a necessity." },
+        { de: "Wer erfolgreich bleiben möchte, muss ...", en: "Whoever wants to remain successful must ..." },
+        { de: "Bildung öffnet Türen zu ...", en: "Education opens doors to ..." }
+      ],
+      grammar: {
+        title: "Feste Nomen-Verb-Verbindungen",
+        text: "Im gehobenen Sprachgebrauch ersetzen Funktionsverbgefüge einfache Verben (<em>eine Rolle spielen, zur Verfügung stehen</em>).",
+        examples: [
+          "Bildung spielt eine wichtige Rolle.",
+          "Neue Kurse stehen zur Verfügung."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Lebenslanges", "Lernen", "spielte", "schon", "immer", "eine", "große", "Rolle."],
+          target: "Lebenslanges Lernen spielte schon immer eine große Rolle.",
+          translation: "Lifelong learning has always played a big role."
+        },
+        {
+          words: ["Man", "muss", "sich", "regelmäßig", "weiterbilden,", "um", "flexibel", "zu", "bleiben."],
+          target: "Man muss sich regelmäßig weiterbilden, um flexibel zu bleiben.",
+          translation: "One must train regularly in order to stay flexible."
+        }
+      ],
+      dialogue: {
+        title: "Weiterbildung im Beruf",
+        lines: [
+          { speaker: "Berater", text: "Warum möchten Sie diesen Zusatzkurs belegen?" },
+          { options: [{ text: "Der Arbeitsmarkt verändert sich schnell und ich möchte meine digitalen Kompetenzen erweitern.", next: 1 }] },
+          { speaker: "Berater", text: "Sehr vorausschauend! Das erhöht Ihre beruflichen Chancen enorm." },
+          { options: [{ text: "Genau, lebenslanges Lernen ist für mich unverzichtbar.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Warum ist lebenslanges Lernen heutzutage so wichtig für die berufliche Zukunft?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Reicht eine Ausbildung heute noch ein Leben lang?",
+          "Welche neuen Fähigkeiten brauchst du?",
+          "Wie verändert sich der Arbeitsmarkt?"
+        ],
+        usefulExpressions: [
+          "Heutzutage reicht es nicht mehr aus, ...",
+          "Man muss bereit sein, ...",
+          "Das ermöglicht es einem, ..."
+        ],
+        exampleAnswer: "Aufgrund der schnellen Veränderungen in Wissenschaft und Technik reicht eine einmalige Ausbildung heute nicht mehr für das gesamte Berufsleben aus. Lebenslanges Lernen ist daher zu einer Notwendigkeit geworden. Wer beruflich erfolgreich bleiben möchte, muss bereit sein, sich regelmäßig weiterzubilden und neue Fähigkeiten anzueignen. Das gilt nicht nur für fachliche Kenntnisse, sondern auch für Sprachkenntnisse und digitale Kompetenzen. Bildung öffnet Türen und gibt einem die Flexibilität, auf Veränderungen am Arbeitsmarkt zu reagieren."
+      }
+    },
+
+    28: {
+      id: "geld",
+      title: "28. Geld und Konsum",
+      level: "B1",
+      desc: "Finanzen, Sparen, Wohlstand und Konsumgesellschaft.",
+      vocab: [
+        { de: "der Lebensstandard", en: "standard of living", ex: "Ein guter Job sichert den Lebensstandard." },
+        { de: "der Mittel zum Zweck", en: "means to an end", ex: "Für mich ist Geld ein Mittel zum Zweck." },
+        { de: "der Wohlstand", en: "prosperity / wealth", ex: "Materieller Wohlstand garantiert kein Glück." },
+        { de: "konsumbewusst", en: "consumer-conscious", ex: "Ich versuche, sehr konsumbewusst einzukaufen." },
+        { de: "die Konsumgesellschaft", en: "consumer society", ex: "In einer Konsumgesellschaft kaufen wir oft zu viel." },
+        { de: "gebraucht", en: "second-hand / used", ex: "Ich kaufe oft gebrauchte Bücher online." },
+        { de: "investieren", en: "to invest", ex: "Man sollte Ersparnisse sinnvoll investieren." },
+        { de: "die Ersparnisse", en: "savings", ex: "Ersparnisse geben mir Sicherheit für Notfälle." },
+        { de: "die Anschaffung", en: "purchase / acquisition", ex: "Ein Auto ist eine teure Anschaffung." },
+        { de: "der Konsum", en: "consumption", ex: "Weniger Konsum bedeutet meist weniger Müll." }
+      ],
+      chunks: [
+        { de: "Geld ist für mich ein Mittel zum Zweck.", en: "For me, money is a means to an end." },
+        { de: "Ich stehe der Konsumgesellschaft skeptisch gegenüber.", en: "I am skeptical of consumer society." },
+        { de: "Ich investiere lieber in Erlebnisse als ...", en: "I prefer investing in experiences rather than ..." }
+      ],
+      grammar: {
+        title: "Irreale Bedingungssätze mit Konjunktiv II",
+        text: "Irreale Bedingungen in der Gegenwart stehen im Konjunktiv II (<em>würde + Infinitiv</em> oder <em>hätte / wäre</em>).",
+        examples: [
+          "Wenn ich mehr Geld hätte, würde ich reisen.",
+          "Wenn man weniger konsumierte, sparte man Geld."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Wenn", "ich", "weniger", "kaufen", "würde,", "hätte", "ich", "mehr", "Geld."],
+          target: "Wenn ich weniger kaufen würde, hätte ich mehr Geld.",
+          translation: "If I bought less, I would have more money."
+        },
+        {
+          words: ["Geld", "bietet", "Sicherheit,", "aber", "macht", "allein", "nicht", "glücklich."],
+          target: "Geld bietet Sicherheit, aber macht allein nicht glücklich.",
+          translation: "Money offers security, but alone it doesn't make you happy."
+        }
+      ],
+      dialogue: {
+        title: "Finanzplanung",
+        lines: [
+          { speaker: "Finanzberater", text: "Sparen Sie regelmäßig einen Teil Ihres Einkommens?" },
+          { options: [{ text: "Ja, ich lege monatlich etwas zurück, um finanzielle Sicherheit zu haben.", next: 1 }] },
+          { speaker: "Finanzberater", text: "Kaufen Sie viele Luxusartikel?" },
+          { options: [{ text: "Nein, ich lebe eher konsumbewusst und investiere lieber in Erlebnisse.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Welche Rolle spielt Geld in deinem Leben und wie stehst du zum Thema Konsumgesellschaft?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Bedeutet Geld für dich Freiheit oder Stress?",
+          "Kaufst du viele Dinge, die du nicht brauchst?",
+          "Was hältst du vom Gebrauchtkauf?"
+        ],
+        usefulExpressions: [
+          "Für mich ist Geld in erster Linie ...",
+          "Ich versuche, meinen Konsum zu ...",
+          "Statt ständig Neues zu kaufen, ..."
+        ],
+        exampleAnswer: "Geld ist für mich ein Mittel zum Zweck: Es bietet finanzielle Sicherheit und ermöglicht mir einen gewissen Lebensstandard sowie schöne Reisen. Allerdings strebe ich nicht nach absolutem Wohlstand. Ich stehe der heutigen Konsumgesellschaft eher skeptisch gegenüber, da viele Dinge gekauft werden, die man eigentlich gar nicht braucht. Ich versuche konsumbewusst zu leben und eher in Erlebnisse und Qualität statt in Quantität zu investieren. Mieten oder Gebraucht kaufen sind gute Alternativen zum ständigen Neukauf."
+      }
+    },
+
+    29: {
+      id: "gesellschaft",
+      title: "29. Gesellschaft und Zusammenleben",
+      level: "B1",
+      desc: "Chancengleichheit, Vielfalt, Ehrenamt und Miteinander.",
+      vocab: [
+        { de: "die Chancengleichheit", en: "equal opportunity", ex: "Chancengleichheit in der Bildung ist extrem wichtig." },
+        { de: "die Vielfalt", en: "diversity / variety", ex: "Kulturelle Vielfalt bereichert die Gesellschaft." },
+        { de: "die Toleranz", en: "tolerance", ex: "Toleranz ist das Fundament für ein friedliches Leben." },
+        { de: "das Ehrenamt", en: "voluntary work / charity", ex: "Er engagiert sich im Ehrenamt bei der Feuerwehr." },
+        { de: "die Bereicherung", en: "enrichment", ex: "Verschiedene Perspektiven sind eine Bereicherung." },
+        { de: "das Vorurteil", en: "prejudice / bias", ex: "Man sollte Vorurteile durch Gespräche abbauen." },
+        { de: "entgegenwirken", en: "to counteract / oppose", ex: "Wir müssen Diskriminierung aktiv entgegenwirken." },
+        { de: "das Miteinander", en: "togetherness / community", ex: "Ein gutes Miteinander verlangt gegenseitigen Respekt." },
+        { de: "das Engagement", en: "commitment / engagement", ex: "Soziales Engagement stärkt den Zusammenhalt." },
+        { de: "der Zusammenhalt", en: "cohesion / solidarity", ex: "In Krisen braucht die Gesellschaft Zusammenhalt." }
+      ],
+      chunks: [
+        { de: "Für ein gutes Zusammenleben braucht man ...", en: "For good coexistence one needs ..." },
+        { de: "Ehrenamtliches Engagement trägt dazu bei, ...", en: "Voluntary commitment contributes to ..." },
+        { de: "Vorurteile lassen sich abbauen durch ...", en: "Prejudices can be dismantled through ..." }
+      ],
+      grammar: {
+        title: "N-Deklination schwacher Maskulina",
+        text: "Bestimmte maskuline Nomen erhalten im Akkusativ, Dativ und Genitiv die Endung <em>-(e)n</em> (<em>des Menschen, dem Nachbarn, den Experten</em>).",
+        examples: [
+          "Wir sprechen mit dem Experten.",
+          "Man sollte dem Nachbarn helfen."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Toleranz", "ist", "die", "Grundlage", "für", "ein", "friedliches", "Zusammenleben."],
+          target: "Toleranz ist die Grundlage für ein friedliches Zusammenleben.",
+          translation: "Tolerance is the foundation for peaceful coexistence."
+        },
+        {
+          words: ["Durch", "ehrenamtliches", "Engagement", "kann", "man", "Vorurteile", "abbauen."],
+          target: "Durch ehrenamtliches Engagement kann man Vorurteile abbauen.",
+          translation: "Through voluntary engagement, one can reduce prejudices."
+        }
+      ],
+      dialogue: {
+        title: "Gesellschaftlicher Zusammenhalt",
+        lines: [
+          { speaker: "Soziologe", text: "Was braucht eine moderne Gesellschaft für mehr Zusammenhalt?" },
+          { options: [{ text: "Gegenseitigen Respekt, Chancengleichheit und offenen Dialog.", next: 1 }] },
+          { speaker: "Soziologe", text: "Engagieren Sie sich selbst in lokalen Projekten?" },
+          { options: [{ text: "Ja, ich helfe ehrenamtlich bei einer lokalen Organisation.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Was macht ein gutes Zusammenleben in einer vielfältigen Gesellschaft aus?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Welche Werte sind am wichtigsten?",
+          "Wie löst man gesellschaftliche Konflikte?",
+          "Warum ist Ehrenamt wertvoll?"
+        ],
+        usefulExpressions: [
+          "In einer vielfältigen Gesellschaft kommt es darauf an, dass ...",
+          "Ein zentraler Wert ist ...",
+          "Wir können Vorurteilen entgegenwirken, indem ..."
+        ],
+        exampleAnswer: "Für ein funktionierendes Zusammenleben in einer vielfältigen Gesellschaft sind gegenseitige Toleranz, Respekt und Chancengleichheit fundamental. Wenn Menschen unterschiedlicher Herkunft, Religion und Lebensentwürfe aufeinandertreffen, entstehen Chancen, aber manchmal auch Konflikte. Um diese zu lösen, braucht es einen offenen Dialog und klare gemeinsame Regeln, an die sich alle halten. Ehrenamtliches Engagement und lokale Projekte tragen maßgeblich dazu bei, den Vorurteilen entgegenzuwirken und das Gemeinschaftsgefühl zu stärken."
+      }
+    },
+
+    30: {
+      id: "meinungen",
+      title: "30. Meinungen und Alltagsthemen",
+      level: "B1",
+      desc: "Debattieren, Positionen begründen und Informationsquellen.",
+      vocab: [
+        { de: "die Nachrichtenquelle", en: "news source", ex: "Man sollte die Nachrichtenquelle vor dem Teilen prüfen." },
+        { de: "die Haltung", en: "attitude / stance", ex: "Er vertritt in dieser Debatte eine klare Haltung." },
+        { de: "die Sachlichkeit", en: "objectivity / matter-of-factness", ex: "In Diskussionen wünsche ich mir mehr Sachlichkeit." },
+        { de: "die Perspektive", en: "perspective / view point", ex: "Man sollte versuchen, die Perspektive anderer zu verstehen." },
+        { de: "das Argument", en: "argument", ex: "Das ist ein starkes Argument in dieser Diskussion." },
+        { de: "der Diskurs", en: "discourse / debate", ex: "Ein gesellschaftlicher Diskurs erfordert Toleranz." },
+        { de: "hinterfragen", en: "to scrutinize / question", ex: "Man muss Behauptungen kritisch hinterfragen." },
+        { de: "einseitig", en: "one-sided / biased", ex: "Berichterstattung sollte niemals einseitig sein." },
+        { de: "begründen", en: "to justify / give reasons", ex: "Können Sie Ihre Meinung auch mit Beispielen begründen?" },
+        { de: "der Standpunkt", en: "point of view / standpoint", ex: "Aus meinem Standpunkt ist diese Entscheidung richtig." }
+      ],
+      chunks: [
+        { de: "Um mir eine Meinung zu bilden, nutze ich ...", en: "To form an opinion, I use ..." },
+        { de: "Man muss nicht immer einer Meinung sein, solange ...", en: "One doesn't always have to agree as long as ..." },
+        { de: "Ich versuche stets, andere Perspektiven zu verstehen.", en: "I always try to understand other perspectives." }
+      ],
+      grammar: {
+        title: "Indirekte Rede mit Konjunktiv I / Ersatzformen",
+        text: "Berichte über Fremdaussagen nutzen in der Schriftsprache Konjunktiv I (<em>er behaupte</em>) oder Umschreibungen mit <em>dass</em>.",
+        examples: [
+          "Der Journalist berichtet, die Lage sei stabil.",
+          "Der Experte behauptet, dass sich die Meinungen ändern."
+        ]
+      },
+      sentenceBuilders: [
+        {
+          words: ["Man", "sollte", "verschiedene", "Quellen", "nutzen,", "um", "sich", "zu", "informieren."],
+          target: "Man sollte verschiedene Quellen nutzen, um sich zu informieren.",
+          translation: "One should use various sources to inform oneself."
+        },
+        {
+          words: ["Eine", "Diskussion", "muss", "immer", "sachlich", "und", "respektvoll", "bleiben."],
+          target: "Eine Diskussion muss immer sachlich und respektvoll bleiben.",
+          translation: "A discussion must always remain objective and respectful."
+        }
+      ],
+      dialogue: {
+        title: "Meinungsbildung",
+        lines: [
+          { speaker: "Journalist", text: "Wie informieren Sie sich über aktuelle politische Debatten?" },
+          { options: [{ text: "Ich vergleiche Berichte aus verschiedenen Zeitungen und Medienquellen.", next: 1 }] },
+          { speaker: "Journalist", text: "Wie reagieren Sie, wenn jemand eine komplett andere Meinung hat?" },
+          { options: [{ text: "Ich höre ruhig zu und argumentiere sachlich, ohne persönlich zu werden.", next: 2 }] }
+        ]
+      },
+      speaking: {
+        prompt: "Wie bildest du dir deine Meinung zu aktuellen Themen und wie gehst du mit anderen Meinungen um?",
+        instruction: "Sprich 1–2 Minuten.",
+        hints: [
+          "Welche Medien nutzt du zur Information?",
+          "Liest du verschiedene Ansichten?",
+          "Wie verhältst du dich in Diskussionen?"
+        ],
+        usefulExpressions: [
+          "Um mir ein Urteil zu bilden, ...",
+          "Wenn mein Gegenüber anderer Meinung ist, ...",
+          "Wichtig ist mir vor allem Sachlichkeit, weil ..."
+        ],
+        exampleAnswer: "Um mir eine fundierte Meinung zu aktuellen politischen oder gesellschaftlichen Themen zu bilden, nutze ich verschiedene verlässliche Nachrichtenquellen wie Tageszeitungen und öffentlich-rechtliche Medien. Ich versuche stets, unterschiedliche Perspektiven zu lesen, um ein einseitiges Bild zu vermeiden. Wenn ich mit Menschen diskutiere, die eine völlig andere Haltung haben, höre ich zunächst ruhig zu. Man muss nicht immer einer Meinung sein, solange die Diskussion sachlich und respektvoll bleibt."
+      }
+    }
+  };
+
+  // View Navigation
+  function showView(viewName) {
+    document.querySelectorAll('main').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(`view-${viewName}`).classList.remove('hidden');
+    
+    if (viewName === 'dashboard') {
+      document.getElementById('nav-dash').classList.add('active');
+      renderDashboard();
+    } else if (viewName === 'progress') {
+      document.getElementById('nav-progress').classList.add('active');
+      updateProgressStats();
+    }
+  }
+
+  // Dashboard Rendering
+  function renderDashboard() {
+    ['a2', 'a2p', 'b1'].forEach(lvl => {
+      const grid = document.getElementById(`grid-${lvl}`);
+      if (grid) grid.innerHTML = '';
+    });
+
+    for (let i = 1; i <= 30; i++) {
+      const topic = topicsData[i];
+      let targetGrid = 'grid-a2';
+      let badgeClass = 'badge-a2';
+      if (topic.level === 'A2+') { targetGrid = 'grid-a2p'; badgeClass = 'badge-a2p'; }
+      if (topic.level === 'B1') { targetGrid = 'grid-b1'; badgeClass = 'badge-b1'; }
+
+      const isDone = userProgress.completedTopics[i];
+      const cardHtml = `
+        <div class="topic-card" onclick="openTopic(${i})">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="topic-num">THEMA ${i}</span>
+              <span class="badge ${badgeClass}">${topic.level}</span>
+            </div>
+            <div class="topic-card-title">${topic.title}</div>
+            <div class="topic-desc">${topic.desc}</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--secondary); display:flex; justify-content:space-between;">
+              <span>Fortschritt</span>
+              <span>${isDone ? '100%' : '0%'}</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: ${isDone ? '100%' : '0%'};"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      const gridEl = document.getElementById(targetGrid);
+      if (gridEl) gridEl.innerHTML += cardHtml;
+    }
+  }
+
+  // Open Lesson View
+  function openTopic(id) {
+    currentTopicId = id;
+    const t = topicsData[id];
+    
+    document.getElementById('lesson-title').innerText = t.title;
+    document.getElementById('lesson-level').innerText = t.level;
+
+    // 1. Render Vocab Cards
+    const vocabGrid = document.getElementById('lesson-vocab');
+    vocabGrid.innerHTML = '';
+    t.vocab.forEach((v) => {
+      vocabGrid.innerHTML += `
+        <div class="v-card" onclick="toggleVCard(this)">
+          <div>
+            <div class="v-de">${v.de}</div>
+            <div class="v-en">${v.en}</div>
+            <div class="v-ex">"${v.ex}"</div>
+          </div>
+          <div class="v-status-btns" onclick="event.stopPropagation()">
+            <button class="btn-sm btn-practice" onclick="markVocab(this, false)">↻ Üben</button>
+            <button class="btn-sm btn-known" onclick="markVocab(this, true)">✓ Bekannt</button>
+          </div>
+        </div>
+      `;
+    });
+
+    // 2. Chunks
+    const chunksList = document.getElementById('lesson-chunks');
+    chunksList.innerHTML = '';
+    t.chunks.forEach(c => {
+      chunksList.innerHTML += `
+        <div class="chunk-item">
+          <div class="chunk-de">${c.de}</div>
+          <div class="chunk-en">${c.en}</div>
+        </div>
+      `;
+    });
+
+    // 3. Grammar
+    const gBox = document.getElementById('lesson-grammar');
+    gBox.innerHTML = `
+      <strong>${t.grammar.title}</strong>
+      <p style="margin-top:6px; font-size:0.9rem;">${t.grammar.text}</p>
+      <div class="grammar-examples">
+        <strong>Beispiele:</strong>
+        <ul style="padding-left:18px; margin-top:4px;">
+          ${t.grammar.examples.map(ex => `<li>${ex}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+
+    // 4. Sentence Builder
+    renderSentenceBuilder(t.sentenceBuilders);
+
+    // 5. Dialogue
+    renderDialogue(t.dialogue);
+
+    // 6. Speaking
+    document.getElementById('speaking-prompt-text').innerText = t.speaking.prompt;
+    document.getElementById('speaking-instruction').innerText = t.speaking.instruction;
+    document.getElementById('speaking-hints').innerHTML = t.speaking.hints.map(h => `<li>${h}</li>`).join('');
+    document.getElementById('speaking-expressions').innerText = t.speaking.usefulExpressions.join(' • ');
+    document.getElementById('model-answer-box').innerText = t.speaking.exampleAnswer;
+    document.getElementById('model-answer-box').style.display = 'none';
+
+    showView('topic');
+  }
+
+  // Vocab Interaction
+  function toggleVCard(card) {
+    const en = card.querySelector('.v-en');
+    const ex = card.querySelector('.v-ex');
+    if (en.style.display === 'block') {
+      en.style.display = 'none';
+      ex.style.display = 'none';
+    } else {
+      en.style.display = 'block';
+      ex.style.display = 'block';
+    }
+  }
+
+  function markVocab(btn, isKnown) {
+    if (isKnown) {
+      userProgress.knownVocab++;
+      btn.parentElement.parentElement.style.opacity = '0.6';
+    }
+  }
+
+  // Sentence Builder Logic
+  function renderSentenceBuilder(sbList) {
+    const container = document.getElementById('lesson-sb');
+    container.innerHTML = '';
+    sbList.forEach((sb, idx) => {
+      container.innerHTML += `
+        <div class="sb-container" id="sb-box-${idx}">
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:6px;">Übersetzung: "${sb.translation}"</div>
+          <div class="drop-zone" id="dz-${idx}"></div>
+          <div class="word-pool" id="wp-${idx}">
+            ${sb.words.map((w) => `<span class="chip" onclick="moveChip('${w}', ${idx})">${w}</span>`).join('')}
+          </div>
+          <div class="feedback" id="fb-${idx}"></div>
+          <button class="btn btn-secondary" style="margin-top:10px; padding:6px 12px; font-size:0.8rem;" onclick="checkSB(${idx}, '${sb.target}')">Überprüfen</button>
+        </div>
+      `;
+    });
+  }
+
+  function moveChip(word, sbIdx) {
+    const dz = document.getElementById(`dz-${sbIdx}`);
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.innerText = word;
+    chip.onclick = function() { chip.remove(); };
+    dz.appendChild(chip);
+  }
+
+  function checkSB(sbIdx, target) {
+    const dz = document.getElementById(`dz-${sbIdx}`);
+    const userSentence = Array.from(dz.children).map(c => c.innerText).join(' ');
+    const fb = document.getElementById(`fb-${sbIdx}`);
+    fb.style.display = 'block';
+
+    if (userSentence === target) {
+      fb.className = 'feedback success';
+      fb.innerText = 'Richtig! Ausgezeichnete Grammatik.';
+      userProgress.sbCount++;
+    } else {
+      fb.className = 'feedback error';
+      fb.innerText = `Nicht ganz richtig. Ziel: "${target}"`;
+    }
+  }
+
+  // Dialogue Rendering
+  function renderDialogue(dlg) {
+    const chat = document.getElementById('lesson-dialogue-chat');
+    chat.innerHTML = `<div class="bubble partner"><strong>Partner:</strong> ${dlg.lines[0].speaker === 'Partner' ? dlg.lines[0].text : ''}</div>`;
+    
+    const opts = document.getElementById('lesson-dialogue-opts');
+    opts.innerHTML = '';
+    dlg.lines[1].options.forEach(opt => {
+      opts.innerHTML += `<button class="opt-btn" onclick="selectDialogueOpt('${opt.text}')">${opt.text}</button>`;
+    });
+  }
+
+  function selectDialogueOpt(text) {
+    const chat = document.getElementById('lesson-dialogue-chat');
+    chat.innerHTML += `<div class="bubble user">${text}</div>`;
+    chat.innerHTML += `<div class="bubble partner"><strong>Partner:</strong> Das klingt sehr gut! Danke für das Gespräch.</div>`;
+    document.getElementById('lesson-dialogue-opts').innerHTML = '<p style="font-size:0.85rem; color:var(--success); font-weight:600;">Dialog erfolgreich abgeschlossen! 🎉</p>';
+  }
+
+  function toggleModelAnswer() {
+    const box = document.getElementById('model-answer-box');
+    box.style.display = box.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function completeTopic() {
+    if (currentTopicId) {
+      userProgress.completedTopics[currentTopicId] = true;
+      alert("Thema als abgeschlossen markiert! Gut gemacht.");
+      showView('dashboard');
+    }
+  }
+
+  // Random Practice Feature
+  function startRandomPractice() {
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('nav-random').classList.add('active');
+    showView('random');
+    generateRandomPractice();
+  }
+
+  function generateRandomPractice() {
+    const keys = Object.keys(topicsData);
+    const randKey = keys[Math.floor(Math.random() * keys.length)];
+    currentRandomTopic = topicsData[randKey];
+
+    const box = document.getElementById('random-content');
+    box.innerHTML = `
+      <div style="font-size:0.8rem; color:var(--primary); font-weight:700;">ZUFALLS-THEMA: ${currentRandomTopic.title}</div>
+      <div style="font-size:1.1rem; font-weight:700; margin:8px 0;">"Sprech- & Formulierungsaufgabe"</div>
+      <p style="font-size:0.95rem; line-height:1.4;">${currentRandomTopic.speaking.prompt}</p>
+      <div style="margin-top:12px; font-size:0.85rem; color:var(--text-muted);">Nutze Ausdrücke wie: <em>${currentRandomTopic.chunks[0] ? currentRandomTopic.chunks[0].de : 'Meiner Meinung nach...'}</em></div>
+    `;
+
+    const modelBox = document.getElementById('random-model-answer-box');
+    if (modelBox) {
+      modelBox.innerText = currentRandomTopic.speaking.exampleAnswer;
+      modelBox.style.display = 'none';
+    }
+  }
+
+  function toggleRandomModelAnswer() {
+    const box = document.getElementById('random-model-answer-box');
+    if (box) {
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+  }
+
+  // ----------------------------------------------------
+  // SPEAKING CHALLENGE MODE WITH COUNTDOWN TIMER
+  // ----------------------------------------------------
+  function startSpeakingChallenge() {
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('nav-speak').classList.add('active');
+    showView('speaking');
+
+    // Clear previous timer if active
+    if (challengeTimerInterval) {
+      clearInterval(challengeTimerInterval);
+      challengeTimerInterval = null;
+    }
+
+    // Pick random topic
+    const keys = Object.keys(topicsData);
+    const randKey = keys[Math.floor(Math.random() * keys.length)];
+    currentChallengeTopic = topicsData[randKey];
+
+    // Set challenge duration based on topic CEFR level
+    challengeSecondsLeft = currentChallengeTopic.level === 'A2' ? 30 : currentChallengeTopic.level === 'A2+' ? 60 : 90;
+
+    renderChallengeCard();
+  }
+
+  function renderChallengeCard() {
+    const topic = currentChallengeTopic;
+    const container = document.getElementById('spk-challenge-card');
+
+    container.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span class="badge badge-b1">Spontanes Sprechen</span>
+        <span style="font-size:0.85rem; font-weight:700; color:var(--secondary);">${topic.level}</span>
+      </div>
+      <div class="speaking-prompt" style="margin-top:10px; font-weight:700; font-size:1.1rem; color:var(--text-main);">${topic.speaking.prompt}</div>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">${topic.speaking.instruction}</p>
+      
+      <div style="margin:16px 0; background:#f8fafc; padding:12px; border-radius:10px; border:1px solid var(--border);">
+        <strong style="font-size:0.85rem;">Schlüsselwörter:</strong>
+        <p style="font-size:0.9rem; color:var(--primary); font-weight:600; margin-top:4px;">${topic.vocab.map(v => v.de).slice(0, 5).join(' • ')}</p>
+      </div>
+
+      <!-- Countdown Timer Display -->
+      <div id="challenge-timer-display" style="font-size:2.5rem; font-weight:800; text-align:center; color:var(--primary); font-family:monospace; margin:12px 0;">
+        ${formatTimerText(challengeSecondsLeft)}
+      </div>
+
+      <!-- Primary Action Controls -->
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn" id="btn-toggle-challenge" onclick="toggleChallengeTimer()">Start Timer ⏱️</button>
+        
+        <!-- Container tombol Nächste dan Beispielantwort -->
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-secondary" onclick="startSpeakingChallenge()">Nächste 🎲</button>
+          <button class="btn btn-secondary" onclick="toggleModelAnswerChallenge()">Beispielantwort anzeigen 💡</button>
+        </div>
+      </div>
+
+      <!-- Hidden Model Answer Box -->
+      <div id="challenge-model-answer" style="display:none; background:#eff6ff; padding:14px; border-radius:10px; margin-top:16px; font-size:0.9rem; border:1px solid #bfdbfe; line-height:1.5;">
+        <strong style="color:var(--primary); display:block; margin-bottom:6px;">Musterantwort (${topic.title}):</strong>
+        ${topic.speaking.exampleAnswer}
+      </div>
+
+      <!-- Self Checklist (Appears when timer completes) -->
+      <div id="challenge-checklist" class="hidden" style="margin-top:20px; border-top:1px solid var(--border); padding-top:14px;">
+        <h4 style="font-size:0.95rem; color:var(--primary); margin-bottom:8px;">Was habe ich geschafft?</h4>
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:0.85rem;">
+          <label><input type="checkbox"> Ich habe vollständige Sätze gesprochen.</label>
+          <label><input type="checkbox"> Ich habe Gründe genannt.</label>
+          <label><input type="checkbox"> Ich habe Beispiele gegeben.</label>
+          <label><input type="checkbox"> Ich habe passende Wörter benutzt.</label>
+          <label><input type="checkbox"> Ich habe mindestens einen Nebensatz verwendet.</label>
+        </div>
+      </div>
+    `;
+  }
+
+  // Timer Controls & Utilities
+  function formatTimerText(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  }
+
+  function toggleChallengeTimer() {
+    const btn = document.getElementById('btn-toggle-challenge');
+    
+    if (challengeTimerInterval) {
+      clearInterval(challengeTimerInterval);
+      challengeTimerInterval = null;
+      btn.innerText = "Fortsetzen ⏱️";
+    } else {
+      btn.innerText = "Pause ⏸️";
+      challengeTimerInterval = setInterval(() => {
+        challengeSecondsLeft--;
+        const display = document.getElementById('challenge-timer-display');
+        if (display) {
+          display.innerText = formatTimerText(challengeSecondsLeft);
+        }
+        
+        if (challengeSecondsLeft <= 0) {
+          clearInterval(challengeTimerInterval);
+          challengeTimerInterval = null;
+          if (btn) {
+            btn.innerText = "Zeit abgelaufen! 🎉";
+            btn.disabled = true;
+          }
+          const checklist = document.getElementById('challenge-checklist');
+          if (checklist) {
+            checklist.classList.remove('hidden');
+          }
+        }
+      }, 1000);
+    }
+  }
+
+  function toggleModelAnswerChallenge() {
+    const box = document.getElementById('challenge-model-answer');
+    if (box) {
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+  }
+
+  function updateProgressStats() {
+    const doneCount = Object.keys(userProgress.completedTopics).length;
+    document.getElementById('st-topics').innerText = `${doneCount} / 30`;
+    document.getElementById('st-vocab').innerText = userProgress.knownVocab;
+    document.getElementById('st-sentence').innerText = userProgress.sbCount;
+  }
+
+  // Initialize App
+  window.onload = function() {
+    renderDashboard();
+  };
+</script>
+</body>
+</html>
